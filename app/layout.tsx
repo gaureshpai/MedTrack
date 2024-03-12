@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 
 export const metadata: Metadata = {
-    title: "Gajanana Stores",
-    description: "This website is developed by Gauresh",
+    title: "Mini Project",
+    description: "This website is developed by the mini project group 8",
     icons: {
         icon: [
             'favicon.ico?v=4',
@@ -28,9 +27,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </head>
             <body>
                 <div>
-                    <Navbar/>
+                    <Navbar />
                     {children}
-                    <Footer/>
                 </div>
             </body>
         </html>

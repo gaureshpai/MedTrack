@@ -1,0 +1,182 @@
+body {
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(0, 0, 0, 0.910);
+    overflow: hidden;
+}
+
+.primary_head {
+    width: 100%;
+    height: 3%;
+    background: rgba(0, 0, 0, 0.573);
+    margin: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 90%;
+    justify-items: center;
+}
+
+.file,
+.edit,
+.view,
+.prgm_name {
+    position: relative;
+    color: white;
+    display: inline;
+    background: rgba(0, 0, 0, 0);
+    border: none;
+    font-size: 80%;
+}
+
+.login {
+    height: 80%;
+    position: relative;
+    border: 1px solid white;
+    border-radius: 70px;
+    background: black;
+    color: white;
+    cursor: pointer;
+    padding-inline: 10%;
+}
+
+.prgm_name {
+    left: -6%;
+}
+
+hr {
+    position: relative;
+    top: 0%;
+    margin: 0px;
+}
+
+.file_destination_grid {
+    width: 100%;
+    display: grid;
+    background-color: rgba(0, 0, 0, 0.467);
+    grid-template-columns: 85% 1fr 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+}
+
+.file_path_parg {
+    position: relative;
+    color: rgba(189, 217, 179, 1);
+    text-align: center;
+    left: 8%;
+    display: inline;
+    padding-block: 1vh;
+    margin-block: 0vh;
+    background: rgba(0, 0, 0, 0);
+    font-size: 80%;
+}
+
+.code {
+    position: relative;
+    width: 100vw;
+    height: 58vh;
+    font-size: 18px;
+    background: rgba(0, 0, 0, 0.321);
+    color: greenyellow;
+    border: none;
+    resize: none;
+    outline: none;
+    padding: 0px;
+}
+
+.under_textarea {
+    position: relative;
+    top: -0.6vh;
+}
+
+.console {
+    overflow: hidden;
+    position: relative;
+    background: black;
+    height: 33%;
+    width: 100%;
+    top: -0.6%;
+}
+
+.file_manager_background {
+    position: relative;
+    overflow: hidden;
+    top: -6%;
+    background: white;
+    width: 13%;
+    height: 95%;
+    border-radius: 0px 10px 0px 0px;
+    float: right;
+    /* Updated float property */
+}
+
+.file_manager {
+    position: relative;
+    overflow: hidden;
+    margin: 2%;
+    background: rgba(0, 0, 0, 0.866);
+    width: 95%;
+    height: 99%;
+    border-radius: 10px 10px 0px 0px;
+    float: right;
+    /* Updated float property */
+}
+
+.file_manager_hr {
+    z-index: 5;
+    position: relative;
+    top: 6%;
+    width: 12.9%;
+}
+
+.file_manager_text {
+    position: relative;
+    display: inline;
+    margin: 0px;
+    font-size: 85%;
+    color: white;
+    padding-left: 25%;
+    top: 1%;
+}
+
+.close_button {
+    position: relative;
+    background: red;
+    border: none;
+    height: 1%;
+    width: 9%;
+    left: 16%;
+    top: 0%;
+}
+
+.console_hr {
+    position: relative;
+    top: 5.5%;
+    border-color: green;
+}
+
+.console_heading {
+    position: relative;
+    display: inline;
+    top: 3%;
+    left: 50%;
+    color: green;
+    font-size: 110%;
+}
+
+/* Add line numbering style */
+.code::before {
+    content: counter(line);
+    counter-increment: line;
+    padding-right: 10px;
+    color: #555;
+}
+.footer {
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
