@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Navbar from "./components/Navbar";
+import  Console  from "./components/console";
 
 export const metadata: Metadata = {
     title: "Mini Project",
@@ -26,9 +27,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             </head>
             <body>
-                <div>
+                <div className="maincontainer">
                     <Navbar />
                     {children}
+                    <Console />
                 </div>
             </body>
         </html>
