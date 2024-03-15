@@ -1,42 +1,11 @@
 import React from 'react'
+import Textarea from './components/textarea'
 
 const page = () => {
     return (
-        // <div>
-        //     <textarea className="code" defaultValue={""} />
-        //     <hr className="under_textarea" />
-        //     <div className="console">
-        //         <p className="console_heading">console</p>
-        //         <hr className="file_manager_hr" />
-        //         <hr className="console_hr" />
-        //         <div className="file_manager_background">
-        //             <div className="file_manager">
-        //                 <p className="file_manager_text">File manager</p>
-        //                 <button className="close_button" />
-        //             </div>
-        //         </div>
-        //     </div>
-        // </div>
-        <>
-  
-  <textarea className="code" defaultValue={""} />
-  <hr className="under_textarea" />
-  {/* a */}
-  <div className="console">
-    <p className="console_heading">console</p>
-    <hr className="console_hr" />
-    <div className="file_manager_background">
-      <div className="file_manager">
-        <div className="a">
-          <p className="file_manager_text">File manager</p>
-          <button className="close_button" />
+        <div>
+            <Textarea />
         </div>
-        <hr className="file_manager_hr" />
-      </div>
-    </div>
-  </div>
-</>
-
     )
 }
 

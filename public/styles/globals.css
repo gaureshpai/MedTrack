@@ -4,7 +4,7 @@ body{
     width: 100vw;
     min-width: 870px;
     background: rgba(0, 0, 0, 0.910);
-    overflow: hidden;
+    min-height: 100vh;
 }
 
     .primary_head {
@@ -29,12 +29,15 @@ body{
 .login {
     height: 17px;
     width: 4vw;
+    height: 17px;
+    width: 4vw;
     position: relative;
     border: 1px solid white;
     border-radius: 70px;
     background: black;
     color: white;
     cursor: pointer;
+    font-size: 10px;
     font-size: 10px;
     padding-inline: 10%;
 }
@@ -97,10 +100,12 @@ hr{
     position: relative;
     overflow: hidden;
     top: -13px;
+    top: -13px;
     background: white;
     width: 13%;
     height: 95%;
     border-radius: 0px 10px 0px 0px;
+    min-width: 160px;
     min-width: 160px;
 }
 .file_manager{
@@ -148,6 +153,7 @@ hr{
 }
 .console_hr {
     position: relative;
+    top: 12px;
     top: 12px;
     border-color: green;
 }
