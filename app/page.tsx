@@ -3,9 +3,9 @@ import Textarea from './components/textarea'
 
 const page = () => {
     return (
-        <div>
+        <>
             <Textarea />
-        </div>
+        </>
     )
 }
 

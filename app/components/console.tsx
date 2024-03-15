@@ -2,7 +2,7 @@ import React from 'react'
 
 const Console = () => {
   return (
-    <div>
+    <>
           <div className="console">
               <p className="console_heading">console</p>
               <hr className="console_hr"/>
@@ -16,7 +16,7 @@ const Console = () => {
                       </div>
                   </div>
           </div>
-    </div>
+    </>
   )
 }
 
