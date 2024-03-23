@@ -1,4 +1,5 @@
 import React from 'react'
+import '@/public/styles/console.css'
 
 const Console = () => {
   return (

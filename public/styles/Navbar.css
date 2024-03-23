@@ -1,0 +1,81 @@
+.primary_head {
+    width: 100%;
+    height: 22px;
+    background: rgba(0, 0, 0, 0.573);
+    margin: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 90%;
+    justify-items: center;
+}
+
+.file,
+.edit,
+.view,
+.prgm_name {
+    position: relative;
+    color: white;
+    display: inline;
+    background: rgba(0, 0, 0, 0);
+    border: none;
+    font-size: 80%;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.file:hover,
+.edit:hover,
+.view:hover,
+.prgm_name:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+
+.login {
+    height: 17px;
+    width: 4vw;
+    height: 17px;
+    width: 4vw;
+    position: relative;
+    border: 1px solid white;
+    border-radius: 70px;
+    background: black;
+    color: white;
+    cursor: pointer;
+    font-size: 10px;
+    font-size: 10px;
+    padding-inline: 10%;
+}
+
+.prgm_name {
+    left: -6%;
+}
+
+hr{
+    position: relative;
+    top: 0%;
+    margin: 0px;
+}
+.file_destination_grid {
+    width: 100%;
+    display: grid;
+    background-color: rgba(0, 0, 0, 0.467);
+    grid-template-columns: 85% 1fr 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+    height: 27px;
+}
+
+.file_path_parg{
+    position:relative;
+    color:rgba(189, 217, 179, 1);
+    text-align: center;
+    left:8%;
+    display:inline;
+    padding-block: 1vh;
+    margin-block:0vh;
+    background:rgba(0, 0, 0, 0);
+    font-size:80%;
+}

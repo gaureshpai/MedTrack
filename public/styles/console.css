@@ -1,0 +1,85 @@
+.console {
+    overflow: hidden;
+    position: relative;
+    ;
+    background: black;
+    height: 100vh;
+    width: 100%;
+
+    top: -0.6%;
+}
+
+.file_manager_background {
+    position: relative;
+    overflow: hidden;
+    top: -13px;
+    top: -13px;
+    background: white;
+    width: 13%;
+    height: 95%;
+    border-radius: 0px 10px 0px 0px;
+    min-width: 160px;
+    min-width: 160px;
+}
+
+.file_manager {
+
+    position: relative;
+    overflow: hidden;
+    margin: 2%;
+    background: rgba(0, 0, 0, 0.866);
+    width: 95%;
+    height: 99%;
+    border-radius: 10px 10px 0px 0px;
+}
+
+.file_manager_hr {
+    z-index: 5;
+    position: relative;
+    top: 4px;
+    width: 100%;
+}
+
+.a {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    place-items: center;
+}
+
+
+.file_manager_text {
+    position: relative;
+    display: inline;
+    margin: 0px;
+    font-size: 85%;
+    color: white;
+    top: 1%;
+}
+
+.close_button {
+    position: relative;
+    background: red;
+    border: none;
+    height: 1%;
+    width: 9%;
+    top: 0%;
+
+}
+
+.console_hr {
+    position: rlative;
+    top: 12px;
+    top: 12px;
+    border-color: green;
+}
+
+.console_heading {
+    position: relative;
+    display: inline;
+    top: 7px;
+    left: 50%;
+    color: green;
+    font-size: 110%;
+
+}

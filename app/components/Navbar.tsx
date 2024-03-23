@@ -1,5 +1,5 @@
 import React from 'react';
-import '@/public/styles/globals.css'
+import '@/public/styles/Navbar.css'
 
 const Navbar = () => {
     return (
@@ -8,20 +8,19 @@ const Navbar = () => {
             <button className="file">file</button>
             <button className="edit">edit</button> 
             <button className="view">view</button>
-            <button className="prgm_name">τρελός_addition.js</button>
+            <a className="prgm_name">MINI PROJECT</a>
         </div>
 
         <hr/>
         <div className="file_destination_grid">
             <p className = "file_path_parg">
-            Desktop/CSEHUB/τρελός_addition.js
-        </p>
-
-        <button className="login">login</button>
-        <button className="login">login</button>
-        <button className="login">login</button>
+            filename
+            </p>
+            <button className="login">login</button>
+            <button className="login">sync in</button>
+            <button className="login">sync out</button>
         </div>
-            <hr />
+        <hr />
         </div>
     );
 };
