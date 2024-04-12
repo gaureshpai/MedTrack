@@ -14,7 +14,7 @@ const Navbar = () => {
         <hr/>
         <div className="file_destination_grid">
             <p className = "file_path_parg">
-            filename
+                filename
             </p>
             <button className="login">login</button>
             <button className="login">sync in</button>

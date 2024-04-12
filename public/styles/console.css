@@ -1,11 +1,9 @@
 .console {
     overflow: hidden;
     position: relative;
-    ;
     background: black;
     height: 100vh;
     width: 100%;
-
     top: -0.6%;
 }
 
@@ -23,7 +21,6 @@
 }
 
 .file_manager {
-
     position: relative;
     overflow: hidden;
     margin: 2%;

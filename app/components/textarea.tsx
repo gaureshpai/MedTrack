@@ -4,9 +4,8 @@ import '@/public/styles/textarea.css'
 const Textarea = () => {
   return (
     <>
-          <textarea className="code"></textarea>
-
-          <hr className="under_textarea" />
+      <textarea className="code"></textarea>
+      <hr className="under_textarea" />
     </>
 
   )
