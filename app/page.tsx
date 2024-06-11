@@ -1,11 +1,11 @@
 import React from 'react'
-import Textarea from './components/textarea'
+import Textarea from '../components/textarea'
 
 const page = () => {
     return (
-    <>
-        <Textarea />
-    </>
+        <>
+            <Textarea />
+        </>
     )
 }
 

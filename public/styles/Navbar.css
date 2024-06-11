@@ -32,7 +32,6 @@
     color: #ffffff;
 }
 
-
 .login {
     height: 17px;
     width: 4vw;
@@ -58,6 +57,7 @@ hr{
     top: 0%;
     margin: 0px;
 }
+
 .file_destination_grid {
     width: 100%;
     display: grid;
