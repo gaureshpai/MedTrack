@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "@/public/globals.css";
+import GovtNavbar from "@/components/(Govt)/GovtNavbar";
+import GovtFooter from "@/components/(Govt)/GovtFooter";
 
 export const metadata: Metadata = {
   title: "Ayuuvikas | Government",
@@ -12,10 +14,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className='bg-black'
+      <body className='bg-black'
       >
-        {children}
+        <GovtNavbar/>
+          {children}
+        <GovtFooter/>
       </body>
     </html>
   );

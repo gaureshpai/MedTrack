@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "@/public/globals.css";
+import Navbar from "@/components/(common)/Navbar";
+import Footer from "@/components/(common)/Footer";
 
 export const metadata: Metadata = {
   title: "Ayuuvikas | Login",
@@ -13,10 +15,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className='bg-black'
+      <body className='bg-black'
       >
-        {children}
+        <Navbar/>
+          {children}
+        <Footer/>
       </body>
     </html>
   );

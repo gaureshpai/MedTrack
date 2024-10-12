@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "@/public/globals.css";
+import AdminNavbar from "@/components/(admin)/AdminNavbar";
+import AdminFooter from "@/components/(admin)/AdminFooter";
 
 export const metadata: Metadata = {
   title: "Ayuuvikas | Admin",
@@ -12,10 +14,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className='bg-black'
+      <body className='bg-black'
       >
-        {children}
+        <AdminNavbar/>
+          {children}
+        <AdminFooter/>
       </body>
     </html>
   );
