@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "@/public/globals.css";
+import DoctorNavbar from "@/components/(Doctor)/DoctorNavbar";
+import DoctorFooter from "@/components/(Doctor)/DoctorFooter";
 
 export const metadata: Metadata = {
   title: "Ayuuvikas | Doctor",
@@ -12,10 +14,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className='bg-black'
+      <body className='bg-black'
       >
-        {children}
+        <DoctorNavbar/>
+          {children}
+        <DoctorFooter/>
       </body>
     </html>
   );
