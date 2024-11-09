@@ -1,6 +1,6 @@
-# Ayuuvikas - Patient Medical History Management System
+# MedTrack - Patient Medical History Management System
 
-**Ayuuvikas** is a comprehensive web application designed to securely manage and streamline patient medical history for healthcare providers, government officials, and patients. By centralizing health records, Ayuuvikas improves access to crucial medical data, facilitates better patient care, and enables informed decision-making for healthcare policy.
+**MedTrack** is a comprehensive web application designed to securely manage and streamline patient medical history for healthcare providers, government officials, and patients. By centralizing health records, MedTrack improves access to crucial medical data, facilitates better patient care, and enables informed decision-making for healthcare policy.
 
 ## Key Features
 - **Role-Based Access Control**: Supports four roles with tailored permissions:
