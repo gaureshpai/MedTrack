@@ -263,16 +263,6 @@ const Navbar = () => {
 									History
 								</span>
 							</Link>
-							<Link
-								href={"/liked"}
-								className="flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
-								onClick={closeSidebar}
-							>
-								<Heart className="w-6 h-6 flex-shrink-0" />
-								<span className={`${!isSidebarOpen ? "md:hidden xl:hidden" : ""}`}>
-									Liked videos
-								</span>
-							</Link>
 						</div>
 
 						{isSidebarOpen && (
