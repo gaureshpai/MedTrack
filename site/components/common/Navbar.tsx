@@ -297,32 +297,30 @@ const Navbar = () => {
 			</aside>
 
 			<nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 md:hidden">
-				<div className="flex items-center justify-around py-2">
+				<div className="flex items-center justify-between">
 					<Link
 						href="/"
-						className={`flex flex-col items-center justify-center py-2 px-3 min-w-0 ${activeTab === "home" ? "text-red-600" : "text-gray-600"
-							}`}
+						className={`flex flex-1 flex-col items-center justify-center py-2 ${activeTab === "home" ? "text-red-600" : "text-gray-600"}`}
 						onClick={() => setActiveTab("home")}
 					>
-						<Home className="h-6 w-6 mb-1" />
+						<Home className="h-5 w-5 mb-0.5" />
 						<span className="text-xs font-medium">Home</span>
 					</Link>
 
 					<Link
 						href="/subscriptions"
-						className={`flex flex-col items-center justify-center py-2 px-3 min-w-0 ${activeTab === "subscriptions" ? "text-red-600" : "text-gray-600"
-							}`}
+						className={`flex flex-1 flex-col items-center justify-center py-2 ${activeTab === "subscriptions" ? "text-red-600" : "text-gray-600"}`}
 						onClick={() => setActiveTab("subscriptions")}
 					>
-						<Library className="h-6 w-6 mb-1" />
-						<span className="text-xs font-medium">Subscriptions</span>
+						<Library className="h-5 w-5 mb-0.5" />
+						<span className="text-xs font-medium text-center leading-tight">Subs</span>
 					</Link>
 
 					<Link
 						href="/create"
-						className="flex flex-col items-center justify-center py-2 px-3 min-w-0"
+						className="flex flex-1 flex-col items-center justify-center py-2"
 					>
-						<div className="bg-red-600 rounded-full p-2 mb-1">
+						<div className="bg-red-600 rounded-full p-2 mb-0.5">
 							<Plus className="h-4 w-4 text-white" />
 						</div>
 						<span className="text-xs font-medium text-gray-600">Create</span>
@@ -330,37 +328,32 @@ const Navbar = () => {
 
 					<Link
 						href="/library"
-						className={`flex flex-col items-center justify-center py-2 px-3 min-w-0 ${activeTab === "library" ? "text-red-600" : "text-gray-600"
-							}`}
+						className={`flex flex-1 flex-col items-center justify-center py-2 ${activeTab === "library" ? "text-red-600" : "text-gray-600"}`}
 						onClick={() => setActiveTab("library")}
 					>
-						<Heart className="h-6 w-6 mb-1" />
+						<Heart className="h-5 w-5 mb-0.5" />
 						<span className="text-xs font-medium">Library</span>
 					</Link>
 
 					{isSignedIn ? (
 						<Link
 							href="/profile"
-							className={`flex flex-col items-center justify-center py-2 px-3 min-w-0 ${activeTab === "profile" ? "text-red-600" : "text-gray-600"
-								}`}
+							className={`flex flex-1 flex-col items-center justify-center py-2 ${activeTab === "profile" ? "text-red-600" : "text-gray-600"}`}
 							onClick={() => setActiveTab("profile")}
 						>
-							<Avatar className="h-6 w-6 mb-1">
+							<Avatar className="h-5 w-5 mb-0.5">
 								<AvatarImage src="/placeholder-user.jpg" />
-								<AvatarFallback className="bg-purple-600 text-white text-xs">
-									U
-								</AvatarFallback>
+								<AvatarFallback className="bg-purple-600 text-white text-[10px]">U</AvatarFallback>
 							</Avatar>
 							<span className="text-xs font-medium">You</span>
 						</Link>
 					) : (
 						<Link
 							href="/signin"
-							className={`flex flex-col items-center justify-center py-2 px-3 min-w-0 ${activeTab === "profile" ? "text-red-600" : "text-gray-600"
-								}`}
+							className={`flex flex-1 flex-col items-center justify-center py-2 ${activeTab === "profile" ? "text-red-600" : "text-gray-600"}`}
 							onClick={() => setActiveTab("profile")}
 						>
-							<User className="h-6 w-6 mb-1" />
+							<User className="h-5 w-5 mb-0.5" />
 							<span className="text-xs font-medium">You</span>
 						</Link>
 					)}
