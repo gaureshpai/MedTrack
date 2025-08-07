@@ -1,5 +1,7 @@
+import Studios from "@/components/studios/Studios";
+
 const page = () => {
-	return <div></div>;
+  return <Studios />;
 };
 
 export default page;
