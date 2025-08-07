@@ -8,12 +8,10 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
-import Navbar from "@/components/common/Navbar";
 
 const relatedVideos = [
 	{
@@ -46,8 +44,6 @@ export default function WatchPage({ params }: { params: { id: string } }) {
 	console.log(params);
 	return (
 		<div className="min-h-screen bg-background">
-			<Navbar />
-
 			<div className="container mx-auto px-4 py-6">
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 					<div className="lg:col-span-2 space-y-4">
@@ -55,11 +51,19 @@ export default function WatchPage({ params }: { params: { id: string } }) {
 							<video
 								className="w-full h-full"
 								controls
-								poster="/sign-language-tutorial.png"
+								preload="metadata"
 							>
-								<source src="#" type="video/mp4" />
-								Your browser does not support the video tag.
+								<source src="/path-to-your-video.mp4" type="video/mp4" />
+								<track
+									src="/captions/video-en.vtt"
+									kind="captions"
+									srcLang="en"
+									label="English"
+									default
+								/>
+								{"Your browser does not support the video tag!"}
 							</video>
+
 
 							<div className="absolute bottom-4 right-4 w-48 h-36 bg-gray-900/90 rounded-lg border-2 border-white">
 								<div className="w-full h-full flex items-center justify-center text-white text-sm">
@@ -74,7 +78,7 @@ export default function WatchPage({ params }: { params: { id: string } }) {
 							</h3>
 							<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 								<div>
-									<label className="text-sm font-medium text-blue-800 block mb-2">
+									<label htmlFor="#" className="text-sm font-medium text-blue-800 block mb-2">
 										Sign Language Delay
 									</label>
 									<Slider
@@ -86,7 +90,7 @@ export default function WatchPage({ params }: { params: { id: string } }) {
 									<span className="text-xs text-blue-600">0.0s delay</span>
 								</div>
 								<div>
-									<label className="text-sm font-medium text-blue-800 block mb-2">
+									<label htmlFor="#" className="text-sm font-medium text-blue-800 block mb-2">
 										Sign Speed
 									</label>
 									<Slider

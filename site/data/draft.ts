@@ -16,6 +16,29 @@ export interface Video {
   time: string
   channel?: Channel | string
   isSaved?: boolean
+  isWatched?: boolean
+  watchedAt?: Date
+  lastWatchedAt?: Date
+  watchProgress?: number
+  watchDuration?: string
+  watchDurationSeconds?: number
+  resumePosition?: number
+  watchCount?: number
+  completedAt?: Date
+  addedToHistoryAt?: Date
+  deviceWatchedOn?: string
+  watchQuality?: string
+  watchSpeed?: number
+  isLive?: boolean
+  watchSource?: string
+  isLiked?: boolean
+  isDisliked?: boolean
+  hasCommented?: boolean
+  isShared?: boolean
+  hasClosedCaptions?: boolean
+  hasSignLanguage?: boolean
+  captionLanguage?: string
+  signLanguageType?: string
 }
 
 export const subscribedChannels: Channel[] = [
@@ -113,6 +136,38 @@ export const getChannelByName = (name: string): Channel | undefined => {
   return subscribedChannels.find(channel => channel.name === name)
 }
 
+const generateWatchData = (baseDate: Date, isWatched: boolean = true) => {
+  if (!isWatched) return {};
+
+  const watchProgress = Math.floor(Math.random() * 100);
+  const watchCount = Math.floor(Math.random() * 5) + 1;
+  const watchedAt = new Date(baseDate.getTime() - Math.random() * 7 * 24 * 60 * 60 * 1000);
+
+  return {
+    isWatched: true,
+    watchedAt,
+    lastWatchedAt: watchCount > 1 ? new Date(watchedAt.getTime() + Math.random() * 24 * 60 * 60 * 1000) : watchedAt,
+    watchProgress,
+    watchDuration: `${Math.floor(Math.random() * 20) + 1}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
+    watchDurationSeconds: Math.floor(Math.random() * 1200) + 60,
+    resumePosition: watchProgress < 100 ? Math.floor(Math.random() * 600) : 0,
+    watchCount,
+    completedAt: watchProgress === 100 ? watchedAt : undefined,
+    addedToHistoryAt: watchedAt,
+    deviceWatchedOn: ['mobile', 'desktop', 'tablet'][Math.floor(Math.random() * 3)],
+    watchQuality: ['720p', '1080p', '480p'][Math.floor(Math.random() * 3)],
+    watchSpeed: [1.0, 1.25, 1.5, 2.0][Math.floor(Math.random() * 4)],
+    watchSource: ['recommended', 'search', 'subscription', 'trending'][Math.floor(Math.random() * 4)],
+    isLiked: Math.random() > 0.7,
+    hasCommented: Math.random() > 0.8,
+    isShared: Math.random() > 0.9,
+    hasClosedCaptions: true,
+    hasSignLanguage: true,
+    captionLanguage: 'en',
+    signLanguageType: 'ASL'
+  };
+};
+
 export const videos: Video[] = [
   {
     id: "1",
@@ -122,7 +177,8 @@ export const videos: Video[] = [
     views: "125K",
     time: "2 days ago",
     channel: getChannelByName("SignLearn Academy"),
-    isSaved: true
+    isSaved: true,
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "2",
@@ -132,7 +188,8 @@ export const videos: Video[] = [
     views: "89K",
     time: "1 week ago",
     channel: getChannelByName("Accessible Cooking"),
-    isSaved: true
+    isSaved: true,
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "3",
@@ -142,7 +199,8 @@ export const videos: Video[] = [
     views: "234K",
     time: "3 days ago",
     channel: getChannelByName("EduSign"),
-    isSaved: true
+    isSaved: true,
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "4",
@@ -152,7 +210,8 @@ export const videos: Video[] = [
     views: "67K",
     time: "5 hours ago",
     channel: getChannelByName("AccessNews"),
-    isSaved: true
+    isSaved: true,
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "5",
@@ -162,7 +221,8 @@ export const videos: Video[] = [
     views: "156K",
     time: "4 days ago",
     channel: getChannelByName("Inclusive Fitness"),
-    isSaved: false
+    isSaved: false,
+    ...generateWatchData(new Date(), false)
   },
   {
     id: "6",
@@ -172,7 +232,8 @@ export const videos: Video[] = [
     views: "445K",
     time: "1 week ago",
     channel: getChannelByName("HistorySign"),
-    isSaved: false
+    isSaved: false,
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "7",
@@ -182,7 +243,8 @@ export const videos: Video[] = [
     views: "98K",
     time: "3 days ago",
     channel: getChannelByName("ASL Learning Hub"),
-    isSaved: true
+    isSaved: true,
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "8",
@@ -192,7 +254,8 @@ export const videos: Video[] = [
     views: "121K",
     time: "6 days ago",
     channel: getChannelByName("Deaf Culture Today"),
-    isSaved: false
+    isSaved: false,
+    ...generateWatchData(new Date(), false)
   },
   {
     id: "9",
@@ -202,7 +265,8 @@ export const videos: Video[] = [
     views: "75K",
     time: "5 days ago",
     channel: getChannelByName("Sign Language Stories"),
-    isSaved: true
+    isSaved: true,
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "10",
@@ -212,7 +276,8 @@ export const videos: Video[] = [
     views: "82K",
     time: "2 weeks ago",
     channel: getChannelByName("Hearing Impaired Tech"),
-    isSaved: false
+    isSaved: false,
+    ...generateWatchData(new Date(), false)
   },
   {
     id: "11",
@@ -222,7 +287,8 @@ export const videos: Video[] = [
     views: "143K",
     time: "1 week ago",
     channel: getChannelByName("SignFlix Originals"),
-    isSaved: true
+    isSaved: true,
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "12",
@@ -232,7 +298,8 @@ export const videos: Video[] = [
     views: "211K",
     time: "4 days ago",
     channel: getChannelByName("EduSign"),
-    isSaved: false
+    isSaved: false,
+    ...generateWatchData(new Date(), false)
   }
 ]
 
@@ -244,7 +311,8 @@ export const subscriptionVideos: Video[] = [
     duration: "10:24",
     views: "125K",
     time: "2 hours ago",
-    channel: subscribedChannels[0]
+    channel: subscribedChannels[0],
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "sub-2",
@@ -253,7 +321,9 @@ export const subscriptionVideos: Video[] = [
     duration: "LIVE",
     views: "2.1K watching",
     time: "Started 30 minutes ago",
-    channel: subscribedChannels[0]
+    channel: subscribedChannels[0],
+    isLive: true,
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "sub-3",
@@ -262,7 +332,8 @@ export const subscriptionVideos: Video[] = [
     duration: "15:42",
     views: "89K",
     time: "1 day ago",
-    channel: subscribedChannels[1]
+    channel: subscribedChannels[1],
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "sub-4",
@@ -271,7 +342,8 @@ export const subscriptionVideos: Video[] = [
     duration: "22:18",
     views: "156K",
     time: "3 days ago",
-    channel: subscribedChannels[2]
+    channel: subscribedChannels[2],
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "sub-5",
@@ -280,7 +352,8 @@ export const subscriptionVideos: Video[] = [
     duration: "2:45",
     views: "45K waiting",
     time: "Premieres in 2 hours",
-    channel: subscribedChannels[3]
+    channel: subscribedChannels[3],
+    ...generateWatchData(new Date(), false)
   },
   {
     id: "sub-6",
@@ -289,7 +362,8 @@ export const subscriptionVideos: Video[] = [
     duration: "18:33",
     views: "78K",
     time: "5 days ago",
-    channel: subscribedChannels[4]
+    channel: subscribedChannels[4],
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "sub-7",
@@ -298,7 +372,8 @@ export const subscriptionVideos: Video[] = [
     duration: "12:15",
     views: "234K",
     time: "1 week ago",
-    channel: subscribedChannels[1]
+    channel: subscribedChannels[1],
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "sub-8",
@@ -307,7 +382,8 @@ export const subscriptionVideos: Video[] = [
     duration: "16:28",
     views: "167K",
     time: "1 week ago",
-    channel: subscribedChannels[2]
+    channel: subscribedChannels[2],
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "sub-9",
@@ -316,7 +392,8 @@ export const subscriptionVideos: Video[] = [
     duration: "25:12",
     views: "92K",
     time: "2 weeks ago",
-    channel: subscribedChannels[0]
+    channel: subscribedChannels[0],
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "sub-10",
@@ -325,7 +402,8 @@ export const subscriptionVideos: Video[] = [
     duration: "14:56",
     views: "143K",
     time: "2 weeks ago",
-    channel: subscribedChannels[4]
+    channel: subscribedChannels[4],
+    ...generateWatchData(new Date(), true)
   }
 ]
 
@@ -336,7 +414,8 @@ export const channelVideos: Video[] = [
     thumbnail: "/sign-language-tutorial.png",
     duration: "12:34",
     views: "125K",
-    time: "2 days ago"
+    time: "2 days ago",
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "ch-2",
@@ -344,7 +423,8 @@ export const channelVideos: Video[] = [
     thumbnail: "/advanced-sign-language.png",
     duration: "25:18",
     views: "89K",
-    time: "1 week ago"
+    time: "1 week ago",
+    ...generateWatchData(new Date(), false)
   },
   {
     id: "ch-3",
@@ -352,7 +432,8 @@ export const channelVideos: Video[] = [
     thumbnail: "/cooking-sign-language.png",
     duration: "18:45",
     views: "156K",
-    time: "3 days ago"
+    time: "3 days ago",
+    ...generateWatchData(new Date(), true)
   },
   {
     id: "ch-4",
@@ -360,7 +441,8 @@ export const channelVideos: Video[] = [
     thumbnail: "/math-tutorial.png",
     duration: "22:10",
     views: "234K",
-    time: "5 days ago"
+    time: "5 days ago",
+    ...generateWatchData(new Date(), true)
   },
 ]
 
@@ -384,4 +466,102 @@ export const getRecommendedVideos = (): Video[] => {
 
 export const getLibraryVideos = (): Video[] => {
   return getAllVideos().filter(video => video.isSaved === true)
+}
+
+
+export const getWatchedVideos = (): Video[] => {
+  return getAllVideos().filter(video => video.isWatched === true)
+}
+
+export const getWatchHistoryVideos = (): Video[] => {
+  return getAllVideos()
+    .filter(video => video.isWatched === true)
+    .sort((a, b) => {
+      const aDate = a.lastWatchedAt || a.watchedAt || new Date(0);
+      const bDate = b.lastWatchedAt || b.watchedAt || new Date(0);
+      return bDate.getTime() - aDate.getTime();
+    });
+}
+
+export const getIncompleteVideos = (): Video[] => {
+  return getAllVideos().filter(video =>
+    video.isWatched === true &&
+    video.watchProgress !== undefined &&
+    video.watchProgress < 100 &&
+    video.watchProgress > 10
+  )
+}
+
+export const getRecentlyWatchedVideos = (days: number = 7): Video[] => {
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - days);
+
+  return getAllVideos().filter(video => {
+    const watchDate = video.lastWatchedAt || video.watchedAt;
+    return watchDate && watchDate >= cutoffDate;
+  });
+}
+
+export const getVideosByWatchSource = (source: string): Video[] => {
+  return getAllVideos().filter(video => video.watchSource === source)
+}
+
+export const getVideosByDevice = (device: string): Video[] => {
+  return getAllVideos().filter(video => video.deviceWatchedOn === device)
+}
+
+export const getLikedVideos = (): Video[] => {
+  return getAllVideos().filter(video => video.isLiked === true)
+}
+
+export const getWatchTimeStats = () => {
+  const watchedVideos = getWatchedVideos();
+  const totalWatchTimeSeconds = watchedVideos.reduce((total, video) => {
+    return total + (video.watchDurationSeconds || 0);
+  }, 0);
+
+  const totalVideosWatched = watchedVideos.length;
+  const completedVideos = watchedVideos.filter(v => v.watchProgress === 100).length;
+  const averageWatchProgress = watchedVideos.reduce((sum, video) => {
+    return sum + (video.watchProgress || 0);
+  }, 0) / watchedVideos.length;
+
+  return {
+    totalWatchTimeSeconds,
+    totalWatchTimeFormatted: formatSeconds(totalWatchTimeSeconds),
+    totalVideosWatched,
+    completedVideos,
+    averageWatchProgress: Math.round(averageWatchProgress),
+    incompleteVideos: totalVideosWatched - completedVideos
+  };
+}
+
+const formatSeconds = (seconds: number): string => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`;
+  }
+  return `${minutes}m`;
+}
+
+export const updateVideoWatchData = (
+  videoId: string | number,
+  watchData: Partial<Video>
+): Video | null => {
+
+  const allVideos = getAllVideos();
+  const video = allVideos.find(v => v.id === videoId);
+
+  if (video) {
+    return {
+      ...video,
+      ...watchData,
+      lastWatchedAt: new Date(),
+      addedToHistoryAt: video.addedToHistoryAt || new Date()
+    };
+  }
+
+  return null;
 }

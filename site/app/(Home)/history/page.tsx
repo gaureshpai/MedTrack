@@ -1,7 +1,7 @@
-import React from "react";
+import WatchHistory from "@/components/history/WatchHistory";
 
 const page = () => {
-	return <div></div>;
+	return <WatchHistory />;
 };
 
 export default page;

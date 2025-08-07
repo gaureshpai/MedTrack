@@ -1,5 +1,4 @@
 import Subscriptions from '@/components/subscriptions/Subscriptions'
-import React from 'react'
 
 const page = () => {
   return (

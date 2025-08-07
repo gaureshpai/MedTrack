@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -49,6 +49,7 @@ const Subscriptions = () => {
           <div className="mb-6">
             <div className="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
               <button
+                type="button"
                 onClick={handleAllChannels}
                 className="flex-shrink-0 cursor-pointer transition-all duration-200"
               >
@@ -69,6 +70,7 @@ const Subscriptions = () => {
 
               {displayedChannels.map((channel) => (
                 <button
+                  type="button"
                   key={channel.id}
                   onClick={() => handleChannelSelect(channel.id)}
                   className={`flex-shrink-0 transition-all cursor-pointer duration-200 ${selectedChannelId === channel.id ? '' : ''

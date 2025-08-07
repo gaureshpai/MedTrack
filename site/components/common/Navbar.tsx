@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Bell, Menu, Search, Upload, Mic, Video, Home, Library, Heart, ChevronRight, Clock, ArrowLeft, User, Plus, FileText } from 'lucide-react';
 import { Input } from "@/components/ui/input";
@@ -191,10 +191,13 @@ const Navbar = () => {
 			</header>
 
 			{isSidebarOpen && (
-				<div
-					className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+				<button
+					type="button"
+					aria-label="Close sidebar overlay"
 					onClick={closeSidebar}
+					className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
 				/>
+
 			)}
 
 			<aside

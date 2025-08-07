@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -11,9 +11,9 @@ import { getLibraryVideos, type Video } from "@/data/draft";
 const Library = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'recent' | 'oldest' | 'title'>('recent');
-  
+
   const libraryVideos = getLibraryVideos();
-  
+
   // Sort videos based on selected option
   const sortedVideos = [...libraryVideos].sort((a, b) => {
     switch (sortBy) {
@@ -72,7 +72,7 @@ const Library = () => {
                   A-Z
                 </Button>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <Button
                   variant="ghost"
@@ -87,21 +87,19 @@ const Library = () => {
         </div>
 
         {libraryVideos.length > 0 ? (
-          <>
-            {viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {sortedVideos.map((video) => (
-                  <VideoCard key={video.id} video={video} />
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {sortedVideos.map((video) => (
-                  <VideoListItem key={video.id} video={video} />
-                ))}
-              </div>
-            )}
-          </>
+          viewMode === 'grid' ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {sortedVideos.map((video) => (
+                <VideoCard key={video.id} video={video} />
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {sortedVideos.map((video) => (
+                <VideoListItem key={video.id} video={video} />
+              ))}
+            </div>
+          )
         ) : (
           <EmptyLibraryState />
         )}
@@ -120,7 +118,7 @@ const EmptyLibraryState = () => {
         No videos saved yet
       </h3>
       <p className="text-gray-600 mb-6 max-w-md mx-auto">
-        Save videos to watch later by clicking the save button on any video. 
+        Save videos to watch later by clicking the save button on any video.
         They'll appear here so you can easily find them when you're ready to watch.
       </p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -135,7 +133,7 @@ const EmptyLibraryState = () => {
           </Button>
         </Link>
       </div>
-      
+
       {/* Tips section */}
       <div className="mt-12 max-w-2xl mx-auto">
         <h4 className="text-lg font-medium mb-4 text-gray-900">How to save videos</h4>
@@ -149,7 +147,7 @@ const EmptyLibraryState = () => {
               Click the save button on any video to add it to your Watch Later list.
             </p>
           </div>
-          
+
           <div className="bg-white p-4 rounded-lg border shadow-sm">
             <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mb-3">
               <Play className="w-4 h-4 text-green-600" />
@@ -159,7 +157,7 @@ const EmptyLibraryState = () => {
               Access your saved videos from any device, anytime you want to watch.
             </p>
           </div>
-          
+
           <div className="bg-white p-4 rounded-lg border shadow-sm">
             <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mb-3">
               <List className="w-4 h-4 text-purple-600" />
@@ -177,7 +175,7 @@ const EmptyLibraryState = () => {
 
 const VideoCard = ({ video }: { video: Video }) => {
   const channelInfo = video.channel && typeof video.channel === 'object' ? video.channel : null;
-  
+
   return (
     <Link href={`/watch/${video.id}`} className="group">
       <div className="space-y-3">
@@ -203,7 +201,7 @@ const VideoCard = ({ video }: { video: Video }) => {
             <Play className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         </div>
-        
+
         <div className="space-y-2">
           <div className="flex gap-3">
             {channelInfo && (
@@ -237,7 +235,7 @@ const VideoCard = ({ video }: { video: Video }) => {
 
 const VideoListItem = ({ video }: { video: Video }) => {
   const channelInfo = video.channel && typeof video.channel === 'object' ? video.channel : null;
-  
+
   return (
     <Link href={`/watch/${video.id}`} className="group">
       <div className="flex flex-col md:flex-row gap-0 md:gap-4 rounded-lg hover:bg-white transition-colors overflow-hidden md:p-4 border border-transparent hover:border-gray-200 hover:shadow-sm">
@@ -263,7 +261,7 @@ const VideoListItem = ({ video }: { video: Video }) => {
             <Play className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         </div>
-        
+
         <div className="flex-1 min-w-0 p-3 md:p-0">
           <h3 className="font-medium line-clamp-2 group-hover:text-blue-600 transition-colors mb-2 text-sm md:text-base">
             {video.title}
