@@ -26,18 +26,12 @@ export default function Feed() {
 											<div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-1.5 py-0.5 rounded">
 												{video.duration}
 											</div>
-											{video.hasSignLanguage && (
-												<div className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-													<div className="w-3 h-3 bg-white rounded-full"></div>
-													Sign Language
-												</div>
-											)}
 										</div>
 										<div className="space-y-1">
 											<h3 className="font-medium line-clamp-2 group-hover:text-blue-600">
 												{video.title}
 											</h3>
-											<p className="text-sm text-gray-600">{video.channel}</p>
+											<p className="text-sm text-gray-600">{video.channel && typeof video.channel === 'object' ? video.channel.name : video.channel}</p>
 											<p className="text-sm text-gray-600">
 												{video.views} • {video.time}
 											</p>

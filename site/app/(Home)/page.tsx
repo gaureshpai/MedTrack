@@ -1,12 +1,8 @@
-import Feed from '@/components/home/feed'
+import Feed from '@/components/home/Feed'
 import React from 'react'
 
 const page = () => {
-  return (
-	<div>
-	  <Feed/>
-	</div>
-  )
+	return <Feed />;
 }
 
 export default page

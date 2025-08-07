@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Bell, Menu, Search, Upload, Mic, Video, Home, Library, Heart, ChevronRight, Clock, ArrowLeft, User, Plus } from 'lucide-react';
+import { Bell, Menu, Search, Upload, Mic, Video, Home, Library, Heart, ChevronRight, Clock, ArrowLeft, User, Plus, FileText } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -229,7 +229,7 @@ const Navbar = () => {
 								className="flex items-center gap-4 px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
 								onClick={closeSidebar}
 							>
-								<Library className="w-6 h-6 flex-shrink-0" />
+								<FileText className="w-6 h-6 flex-shrink-0" />
 								<span className={`${!isSidebarOpen ? "md:hidden xl:hidden" : ""}`}>
 									Subscriptions
 								</span>
@@ -312,7 +312,7 @@ const Navbar = () => {
 						className={`flex flex-1 flex-col items-center justify-center py-2 ${activeTab === "subscriptions" ? "text-red-600" : "text-gray-600"}`}
 						onClick={() => setActiveTab("subscriptions")}
 					>
-						<Library className="h-5 w-5 mb-0.5" />
+						<FileText className="h-5 w-5 mb-0.5" />
 						<span className="text-xs font-medium text-center leading-tight">Subs</span>
 					</Link>
 
