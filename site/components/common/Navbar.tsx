@@ -435,7 +435,6 @@ const Navbar = () => {
 			</Dialog>
 
 			<div className="h-14"></div>
-			<div className="h-16 md:hidden"></div>
 		</>
 	);
 };

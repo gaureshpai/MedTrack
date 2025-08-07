@@ -15,13 +15,7 @@ export interface Video {
   views: string
   time: string
   channel?: Channel | string
-}
-
-export interface Playlist {
-  id: number
-  title: string
-  videoCount: number
-  thumbnail: string
+  isSaved?: boolean
 }
 
 export const subscribedChannels: Channel[] = [
@@ -34,7 +28,7 @@ export const subscribedChannels: Channel[] = [
     isSubscribed: true
   },
   {
-    id: "2", 
+    id: "2",
     name: "Sign Language Stories",
     avatar: "/placeholder.svg?height=40&width=40&text=SLS",
     subscribers: "890K",
@@ -128,6 +122,7 @@ export const videos: Video[] = [
     views: "125K",
     time: "2 days ago",
     channel: getChannelByName("SignLearn Academy"),
+    isSaved: true
   },
   {
     id: "2",
@@ -136,7 +131,8 @@ export const videos: Video[] = [
     duration: "15:22",
     views: "89K",
     time: "1 week ago",
-    channel: getChannelByName("Accessible Cooking")
+    channel: getChannelByName("Accessible Cooking"),
+    isSaved: true
   },
   {
     id: "3",
@@ -145,7 +141,8 @@ export const videos: Video[] = [
     duration: "18:45",
     views: "234K",
     time: "3 days ago",
-    channel: getChannelByName("EduSign")
+    channel: getChannelByName("EduSign"),
+    isSaved: true
   },
   {
     id: "4",
@@ -154,7 +151,8 @@ export const videos: Video[] = [
     duration: "8:12",
     views: "67K",
     time: "5 hours ago",
-    channel: getChannelByName("AccessNews")
+    channel: getChannelByName("AccessNews"),
+    isSaved: true
   },
   {
     id: "5",
@@ -163,7 +161,8 @@ export const videos: Video[] = [
     duration: "25:30",
     views: "156K",
     time: "4 days ago",
-    channel: getChannelByName("Inclusive Fitness")
+    channel: getChannelByName("Inclusive Fitness"),
+    isSaved: false
   },
   {
     id: "6",
@@ -172,7 +171,68 @@ export const videos: Video[] = [
     duration: "42:15",
     views: "445K",
     time: "1 week ago",
-    channel: getChannelByName("HistorySign")
+    channel: getChannelByName("HistorySign"),
+    isSaved: false
+  },
+  {
+    id: "7",
+    title: "Sign Language Alphabet Mastery",
+    thumbnail: "/placeholder.svg?height=180&width=320&text=Alphabet",
+    duration: "9:15",
+    views: "98K",
+    time: "3 days ago",
+    channel: getChannelByName("ASL Learning Hub"),
+    isSaved: true
+  },
+  {
+    id: "8",
+    title: "Top 10 Deaf Culture Facts You Didn't Know",
+    thumbnail: "/placeholder.svg?height=180&width=320&text=Deaf+Facts",
+    duration: "13:27",
+    views: "121K",
+    time: "6 days ago",
+    channel: getChannelByName("Deaf Culture Today"),
+    isSaved: false
+  },
+  {
+    id: "9",
+    title: "Live Interpretation Tips for Beginners",
+    thumbnail: "/placeholder.svg?height=180&width=320&text=Interpretation+Tips",
+    duration: "19:03",
+    views: "75K",
+    time: "5 days ago",
+    channel: getChannelByName("Sign Language Stories"),
+    isSaved: true
+  },
+  {
+    id: "10",
+    title: "Accessible Tech: Tools That Change Lives",
+    thumbnail: "/placeholder.svg?height=180&width=320&text=Accessible+Tech",
+    duration: "11:44",
+    views: "82K",
+    time: "2 weeks ago",
+    channel: getChannelByName("Hearing Impaired Tech"),
+    isSaved: false
+  },
+  {
+    id: "11",
+    title: "Understanding Facial Expressions in ASL",
+    thumbnail: "/placeholder.svg?height=180&width=320&text=ASL+Expressions",
+    duration: "14:29",
+    views: "143K",
+    time: "1 week ago",
+    channel: getChannelByName("SignFlix Originals"),
+    isSaved: true
+  },
+  {
+    id: "12",
+    title: "Learn Numbers 1-100 in Sign Language",
+    thumbnail: "/placeholder.svg?height=180&width=320&text=Sign+Numbers",
+    duration: "20:00",
+    views: "211K",
+    time: "4 days ago",
+    channel: getChannelByName("EduSign"),
+    isSaved: false
   }
 ]
 
@@ -304,39 +364,12 @@ export const channelVideos: Video[] = [
   },
 ]
 
-export const playlists: Playlist[] = [
-  {
-    id: 1,
-    title: "Sign Language Basics",
-    videoCount: 12,
-    thumbnail: "/sign-language-basics-playlist.png",
-  },
-  {
-    id: 2,
-    title: "Educational Content",
-    videoCount: 8,
-    thumbnail: "/placeholder-az198.png",
-  },
-  {
-    id: 3,
-    title: "ASL Learning Journey",
-    videoCount: 15,
-    thumbnail: "/placeholder.svg?height=180&width=320&text=ASL+Journey",
-  },
-  {
-    id: 4,
-    title: "Deaf Culture & Community",
-    videoCount: 6,
-    thumbnail: "/placeholder.svg?height=180&width=320&text=Deaf+Culture",
-  }
-]
-
 export const getAllVideos = (): Video[] => {
   return [...videos, ...subscriptionVideos, ...channelVideos]
 }
 
 export const getVideosByChannel = (channelId: string): Video[] => {
-  return getAllVideos().filter(video => 
+  return getAllVideos().filter(video =>
     video.channel && typeof video.channel === 'object' && video.channel.id === channelId
   )
 }
@@ -347,4 +380,8 @@ export const getSubscribedChannelVideos = (): Video[] => {
 
 export const getRecommendedVideos = (): Video[] => {
   return videos
+}
+
+export const getLibraryVideos = (): Video[] => {
+  return getAllVideos().filter(video => video.isSaved === true)
 }
