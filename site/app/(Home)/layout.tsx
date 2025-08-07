@@ -13,7 +13,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="min-h-screen bg-background">
+		<div className="min-h-screen bg-background md:pl-16 xl:pl-20">
 			<Navbar />
 			{children}
 		</div>
