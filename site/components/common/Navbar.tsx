@@ -24,6 +24,7 @@ import {
   ChevronRight,
 } from "lucide-react"
 import VoiceSearchDialog from "@/components/common/voice-search-dialog"
+import SignLanguageDialog from "@/components/common/sign-language-dialog"
 
 export default function Navbar() {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
@@ -425,34 +426,21 @@ export default function Navbar() {
         onTranscriptChange={handleVoiceTranscriptChange}
       />
 
-      <Dialog open={isCameraModalOpen} onOpenChange={setIsCameraModalOpen}>
-        <DialogContent className="w-full max-w-sm mx-auto px-4">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Video className="h-5 w-5" />
-              Sign Language Search
-            </DialogTitle>
-          </DialogHeader>
-          <div className="py-6 text-center">
-            <div className="mx-auto h-48 bg-gray-100 rounded-lg flex items-center justify-center mb-4 border-2 border-dashed border-gray-300">
-              <div className="text-center">
-                <Video className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-500 text-sm">Camera view will appear here</p>
-              </div>
-            </div>
-            <p className="text-lg font-medium mb-2">Sign Language Recognition</p>
-            <p className="text-sm text-gray-500 mb-4">Use sign language gestures to search</p>
-            <div className="flex gap-2 justify-center flex-wrap">
-              <Button variant="default" className="text-sm">
-                Start Camera
-              </Button>
-              <Button variant="outline" className="text-sm bg-transparent" onClick={() => setIsCameraModalOpen(false)}>
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <SignLanguageDialog
+        isCameraModalOpen={isCameraModalOpen}
+        setIsCameraModalOpen={setIsCameraModalOpen}
+        onResult={(text: String) => {
+          setSearchQuery((prev) => {
+            const sep = prev && !prev.endsWith(" ") ? " " : ""
+            return `${prev}${sep}${text}`
+          })
+          const el = isMobileSearchOpen ? mobileInputRef.current : desktopInputRef.current
+          el?.focus()
+          requestAnimationFrame(() => {
+            if (el) el.selectionStart = el.selectionEnd = el.value.length
+          })
+        }}
+      />
 
       <div className="h-14" />
     </>
