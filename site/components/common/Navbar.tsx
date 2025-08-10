@@ -66,15 +66,34 @@ const Navbar = () => {
 								<Search className="h-4 w-4" />
 							</Button>
 						</div>
-						<Button
-							variant="ghost"
-							size="icon"
-							className="ml-2 hover:bg-gray-100 rounded-full"
-							title="Search with voice"
-							onClick={() => setIsVoiceModalOpen(true)}
-						>
-							<Mic className="h-4 w-4" />
-						</Button>
+						<div className="relative inline-block ml-2">
+							<Button
+								variant="ghost"
+								size="icon"
+								className="h-10 w-10 cursor-pointer bg-gray-100 hover:bg-gray-200 rounded-full"
+								title="Search with voice"
+								onClick={() => setIsVoiceModalOpen(true)}
+							>
+								<Mic className="h-5 w-5" />
+							</Button>
+							<span className="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-bold px-1 py-0.5 rounded">
+								Beta
+							</span>
+						</div>
+						<div className="relative inline-block ml-2">
+							<Button
+								variant="ghost"
+								size="icon"
+								className="h-10 w-10 cursor-pointer bg-gray-100 hover:bg-gray-200 rounded-full"
+								title="Search with sign language"
+								onClick={() => setIsCameraModalOpen(true)}
+							>
+								<Video className="h-5 w-5" />
+							</Button>
+							<span className="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-bold px-1 py-0.5 rounded">
+								Beta
+							</span>
+						</div>
 					</div>
 				)}
 
@@ -114,24 +133,35 @@ const Navbar = () => {
 								>
 									<Search className="h-5 w-5" />
 								</Button>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="ml-2 h-10 w-10 cursor-pointer bg-gray-100 hover:bg-gray-200 rounded-full"
-									title="Search with voice"
-									onClick={() => setIsVoiceModalOpen(true)}
-								>
-									<Mic className="h-5 w-5" />
-								</Button>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="ml-2 h-10 w-10 cursor-pointer bg-gray-100 hover:bg-gray-200 rounded-full"
-									title="Search with sign language"
-									onClick={() => setIsCameraModalOpen(true)}
-								>
-									<Video className="h-5 w-5" />
-								</Button>
+								<div className="relative inline-block ml-2">
+									<Button
+										variant="ghost"
+										size="icon"
+										className="h-10 w-10 cursor-pointer bg-gray-100 hover:bg-gray-200 rounded-full"
+										title="Search with voice"
+										onClick={() => setIsVoiceModalOpen(true)}
+									>
+										<Mic className="h-5 w-5" />
+									</Button>
+									<span className="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-bold px-1 py-0.5 rounded">
+										Beta
+									</span>
+								</div>
+
+								<div className="relative inline-block ml-2">
+									<Button
+										variant="ghost"
+										size="icon"
+										className="h-10 w-10 cursor-pointer bg-gray-100 hover:bg-gray-200 rounded-full"
+										title="Search with sign language"
+										onClick={() => setIsCameraModalOpen(true)}
+									>
+										<Video className="h-5 w-5" />
+									</Button>
+									<span className="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-bold px-1 py-0.5 rounded">
+										Beta
+									</span>
+								</div>
 							</div>
 						</div>
 
