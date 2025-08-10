@@ -429,7 +429,7 @@ export default function Navbar() {
       <SignLanguageDialog
         isCameraModalOpen={isCameraModalOpen}
         setIsCameraModalOpen={setIsCameraModalOpen}
-        onResult={(text: String) => {
+        onResult={(text: string) => {
           setSearchQuery((prev) => {
             const sep = prev && !prev.endsWith(" ") ? " " : ""
             return `${prev}${sep}${text}`

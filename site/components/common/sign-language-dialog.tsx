@@ -9,7 +9,7 @@ import { useSignLanguage } from "@/hooks/use-sign-language"
 type Props = {
   isCameraModalOpen: boolean
   setIsCameraModalOpen: (open: boolean) => void
-  onResult: (text: string) => void // APPEND to search input in parent
+  onResult: (text: string) => void
 }
 
 export default function SignLanguageDialog({ isCameraModalOpen, setIsCameraModalOpen, onResult }: Props) {
@@ -26,7 +26,6 @@ export default function SignLanguageDialog({ isCameraModalOpen, setIsCameraModal
   } = useSignLanguage({
     videoRef,
     onRecognizedWord: (word) => {
-      // append to parent (search bar)
       onResult(word)
     },
   })
@@ -37,9 +36,7 @@ export default function SignLanguageDialog({ isCameraModalOpen, setIsCameraModal
       try {
         await startRecognition()
         if (!cancelled) setStreaming(true)
-      } catch {
-        // errors surfaced via hook error state
-      }
+      } catch { }
     }
     if (isCameraModalOpen) open()
     return () => {
@@ -47,7 +44,6 @@ export default function SignLanguageDialog({ isCameraModalOpen, setIsCameraModal
       stopRecognition()
       setStreaming(false)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCameraModalOpen])
 
   const handleClose = (open: boolean) => {
@@ -113,9 +109,7 @@ export default function SignLanguageDialog({ isCameraModalOpen, setIsCameraModal
                   try {
                     await startRecognition()
                     setStreaming(true)
-                  } catch {
-                    // handled by error state
-                  }
+                  } catch { }
                 }}
               >
                 <Play className="h-4 w-4 mr-2" />

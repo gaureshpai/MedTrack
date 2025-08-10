@@ -14,17 +14,13 @@ const Library = () => {
 
   const libraryVideos = getLibraryVideos();
 
-  // Sort videos based on selected option
   const sortedVideos = [...libraryVideos].sort((a, b) => {
     switch (sortBy) {
       case 'recent':
-        // Sort by most recent (assuming lower time values are more recent)
         return a.time.localeCompare(b.time);
       case 'oldest':
-        // Sort by oldest
         return b.time.localeCompare(a.time);
       case 'title':
-        // Sort alphabetically by title
         return a.title.localeCompare(b.title);
       default:
         return 0;
@@ -134,7 +130,6 @@ const EmptyLibraryState = () => {
         </Link>
       </div>
 
-      {/* Tips section */}
       <div className="mt-12 max-w-2xl mx-auto">
         <h4 className="text-lg font-medium mb-4 text-gray-900">How to save videos</h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">

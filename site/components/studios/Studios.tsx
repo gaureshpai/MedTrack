@@ -43,7 +43,6 @@ const Studio = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* Studio Header */}
             <header className="bg-white border-b border-gray-200 px-6 py-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
@@ -70,7 +69,6 @@ const Studio = () => {
                 </div>
             </header>
 
-            {/* Studio Content */}
             <div className="p-6">
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <TabsList className="grid w-full grid-cols-3 max-w-md">
@@ -104,7 +102,6 @@ const LoginForm = ({ onLogin, setUser }: { onLogin: (status: boolean) => void; s
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Mock login - in real app, this would call an API
         setUser({ name: name || 'Creator', email });
         onLogin(true);
     };
@@ -217,14 +214,12 @@ const UploadSection = () => {
     };
 
     const handlePublish = () => {
-        // Mock publish - in real app, this would upload to server
         console.log('Publishing video:', {
             file: uploadedFile,
             details: videoDetails,
             captions: captions
         });
         alert('Video published successfully!');
-        // Reset form
         setUploadedFile(null);
         setVideoDetails({ title: '', description: '', thumbnail: null, visibility: 'public' });
         setCaptions([]);
@@ -232,7 +227,6 @@ const UploadSection = () => {
 
     return (
         <div className="max-w-4xl mx-auto space-y-6">
-            {/* Video Upload */}
             <Card>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -291,7 +285,6 @@ const UploadSection = () => {
                 </CardContent>
             </Card>
 
-            {/* Video Details */}
             {uploadedFile && (
                 <Card>
                     <CardHeader>
@@ -331,7 +324,6 @@ const UploadSection = () => {
                 </Card>
             )}
 
-            {/* Captions */}
             {uploadedFile && (
                 <Card>
                     <CardHeader>
@@ -382,7 +374,6 @@ const UploadSection = () => {
                 </Card>
             )}
 
-            {/* Publish Button */}
             {uploadedFile && (
                 <div className="flex justify-end">
                     <Button onClick={handlePublish} size="lg" className="px-8">
@@ -514,7 +505,6 @@ const CaptionEditor = ({
                 </TabsContent>
             </Tabs>
 
-            {/* Caption List */}
             {captions.length > 0 && (
                 <div className="mt-6">
                     <h4 className="font-medium mb-4">Captions ({captions.length})</h4>
@@ -554,7 +544,6 @@ const CaptionEditor = ({
 };
 
 const VideosSection = () => {
-    // Mock data - in real app, this would come from API
     const [videos] = useState<UploadedVideo[]>([
         {
             id: '1',
@@ -704,7 +693,6 @@ const AnalyticsSection = () => {
         <div className="max-w-6xl mx-auto space-y-6">
             <h2 className="text-2xl font-bold">Channel Analytics</h2>
 
-            {/* Overview Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <Card>
                     <CardContent className="p-6">
@@ -763,7 +751,6 @@ const AnalyticsSection = () => {
                 </Card>
             </div>
 
-            {/* Recent Performance */}
             <Card>
                 <CardHeader>
                     <CardTitle>Recent Performance</CardTitle>
