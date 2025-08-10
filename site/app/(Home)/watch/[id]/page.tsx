@@ -6,11 +6,11 @@ import WatchView from "@/components/watch/watch-view"
 import { getVideoById, getChannelByName, type Channel } from "@/data/draft"
 
 type PageProps = {
-  params?: { id?: string }
+  params?: Promise<{ id?: string }>
 }
 
-export default async function Page({ params = { id: "1" } }: PageProps) {
-  const id = params?.id ?? "1"
+export default async function Page({ params }: PageProps) {
+  const id = (await params)?.id ?? "1"
   const video = getVideoById(id)
   
   const MEDIA_MAP: Record<
@@ -18,8 +18,8 @@ export default async function Page({ params = { id: "1" } }: PageProps) {
     { videoUrl?: string; captionUrl?: string; signVideoUrl?: string; signCaptionUrl?: string }
   > = {
     "1": {
-      videoUrl: "/test.mp4",
-      captionUrl: "/captions/video-en.vtt",
+      videoUrl: "/test/shape.mp4",
+      captionUrl: "/test/shape.srt",
       signVideoUrl: "/path-to-your-sign-video.mp4",
     },
   }
@@ -46,6 +46,7 @@ export default async function Page({ params = { id: "1" } }: PageProps) {
 
   return (
     <main className="min-h-screen bg-background">
+      <script src="https://unpkg.com/pose-viewer@latest/dist/pose-viewer/pose-viewer.esm.js" type="module"></script>
       <div className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 gap-6">
           <WatchView

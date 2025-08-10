@@ -1,22 +1,29 @@
-"use client"
+"use client";
 
-import { useEffect, useMemo, useRef, useState } from "react"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
-import { Switch } from "@/components/ui/switch"
+import { createElement, useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { extractSrt } from "@/lib/extractor";
 
 type WatchViewProps = {
-  videoId?: string
-  videoUrl?: string | null
-  captionUrl?: string | null
-  posterUrl?: string | null
-  
-  signVideoUrl?: string | null
-  signCaptionUrl?: string | null
-  initialSpeed?: number
-}
+  videoId?: string;
+  videoUrl?: string | null;
+  captionUrl?: string | null;
+  posterUrl?: string | null;
+
+  signVideoUrl?: string | null;
+  signCaptionUrl?: string | null;
+  initialSpeed?: number;
+};
 
 export default function WatchView({
   videoId = "1",
@@ -27,100 +34,195 @@ export default function WatchView({
   signCaptionUrl,
   initialSpeed = 1.0,
 }: WatchViewProps) {
-  const hasVideo = Boolean(videoUrl)
-  const hasSignVideo = Boolean(signVideoUrl)
+  const hasVideo = Boolean(videoUrl);
+  const hasSignVideo = Boolean(signVideoUrl);
 
-  const mainRef = useRef<HTMLVideoElement | null>(null)
-  const signRef = useRef<HTMLVideoElement | null>(null)
-  
-  const [syncMode, setSyncMode] = useState<"adjust" | "pause">("adjust")
-  const [speed, setSpeed] = useState<string>(() => `${initialSpeed}`)
-  const numericSpeed = useMemo(() => Number.parseFloat(speed) || 1.0, [speed])
-  
-  const [mainTime, setMainTime] = useState<number>(0)
-  
-  const [simOffset, setSimOffset] = useState<number>(0) 
-  const [showGrid, setShowGrid] = useState<boolean>(false) 
-  const [highContrast, setHighContrast] = useState<boolean>(false) 
-  
+  const mainRef = useRef<HTMLVideoElement | null>(null);
+  const signRef = useRef<HTMLVideoElement | null>(null);
+
+  const [syncMode, setSyncMode] = useState<"adjust" | "pause">("adjust");
+  const [speed, setSpeed] = useState<string>(() => `${initialSpeed}`);
+  const numericSpeed = useMemo(() => Number.parseFloat(speed) || 1.0, [speed]);
+  const [captions, setCaptions] = useState<
+    {
+      sequence: number;
+      start_time: string;
+      end_time: string;
+      caption: string;
+    }[]
+  >([]);
+  const [currentCaption, setCurrentCaption] = useState<string>("");
+  const [poseData, setPoseData] = useState<any>(null);
+
+  const [mainTime, setMainTime] = useState<number>(0);
+
+  const [simOffset, setSimOffset] = useState<number>(0);
+  const [showGrid, setShowGrid] = useState<boolean>(false);
+  const [highContrast, setHighContrast] = useState<boolean>(false);
+
   useEffect(() => {
-    const main = mainRef.current
-    const sign = signRef.current
-    const targetRate = syncMode === "adjust" ? numericSpeed : 1.0
-    if (main) main.playbackRate = targetRate
-    if (sign) sign.playbackRate = targetRate
-  }, [syncMode, numericSpeed])
+    const main = mainRef.current;
+    const sign = signRef.current;
+    const targetRate = syncMode === "adjust" ? numericSpeed : 1.0;
+    if (main) main.playbackRate = targetRate;
+    if (sign) sign.playbackRate = targetRate;
+  }, [syncMode, numericSpeed]);
 
   const pauseBoth = () => {
-    mainRef.current?.pause()
-    signRef.current?.pause()
-  }
-  
+    mainRef.current?.pause();
+    signRef.current?.pause();
+  };
+
   useEffect(() => {
-    const main = mainRef.current
-    const sign = signRef.current
-    if (!main || !sign) return
+    const main = mainRef.current;
+    const sign = signRef.current;
+    if (!main || !sign) return;
 
-    const onPlay = async () => {
-      try {
-        sign.playbackRate = main.playbackRate
-        await sign.play()
-      } catch { }
-    }
-    const onPause = () => {
-      sign.pause()
-    }
-    const onSeeking = () => {
-      const desired = (main.currentTime || 0) + simOffset
-      sign.currentTime = Math.max(0, desired)
-    }
-    const onRateChange = () => {
-      sign.playbackRate = main.playbackRate
-    }
-
-    main.addEventListener("play", onPlay)
-    main.addEventListener("pause", onPause)
-    main.addEventListener("seeking", onSeeking)
-    main.addEventListener("ratechange", onRateChange)
-    return () => {
-      main.removeEventListener("play", onPlay)
-      main.removeEventListener("pause", onPause)
-      main.removeEventListener("seeking", onSeeking)
-      main.removeEventListener("ratechange", onRateChange)
-    }
-  }, [simOffset, hasSignVideo])
-  
-  useEffect(() => {
-    const main = mainRef.current
-    const sign = signRef.current
-    if (!main || !sign) return
-
-    let raf = 0
-    const DRIFT_THRESHOLD = 0.25 
+    let raf = 0;
+    const DRIFT_THRESHOLD = 0.25;
     const tick = () => {
-      const t = main.currentTime || 0
-      setMainTime(t)
-      const desired = t + simOffset
-      const current = sign.currentTime || 0
-      const drift = desired - current
+      const t = main.currentTime || 0;
+      setMainTime(t);
+      const desired = t + simOffset;
+      const current = sign.currentTime || 0;
+      const drift = desired - current;
       if (Math.abs(drift) > DRIFT_THRESHOLD) {
-        sign.currentTime = Math.max(0, desired)
+        sign.currentTime = Math.max(0, desired);
       }
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [simOffset, hasVideo, hasSignVideo])
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [simOffset, hasVideo, hasSignVideo]);
   const formatOffset = (sec: number) => {
-    if (sec === 0) return "0.0s"
-    return `${sec > 0 ? "+" : ""}${sec.toFixed(1)}s`
-  }
+    if (sec === 0) return "0.0s";
+    return `${sec > 0 ? "+" : ""}${sec.toFixed(1)}s`;
+  };
+
+  const timeStringToSeconds = (timeString: string): number => {
+    const [hours, minutes, seconds] = timeString.split(":");
+    const [sec, ms] = seconds.split(",");
+    return (
+      parseInt(hours) * 3600 +
+      parseInt(minutes) * 60 +
+      parseInt(sec) +
+      parseInt(ms) / 1000
+    );
+  };
+
+  const findCurrentCaption = (
+    currentTime: number,
+    captionsC: typeof captions
+  ) => {
+    return captionsC.find((caption) => {
+      const startTime = timeStringToSeconds(caption.start_time);
+      const endTime = timeStringToSeconds(caption.end_time);
+      return currentTime >= startTime && currentTime <= endTime;
+    });
+  };
+  const fetchPoseData = async (caption: string) => {
+    try {
+      // Replace with your actual API endpoint
+      const response = await fetch(`https://us-central1-sign-mt.cloudfunctions.net/spoken_text_to_signed_pose?text=${encodeURI(caption)}&spoken=en&signed=ase`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+      throw new Error('Failed to fetch pose file')
+    }
+    
+    // Get the pose file as a blob
+    const poseFileBlob = await response.blob()
+    
+    // Create a temporary URL for the file
+    const fileUrl = URL.createObjectURL(poseFileBlob)
+    
+    return fileUrl;
+    } catch (error) {
+      console.error("Error fetching pose data:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    if (captionUrl) {
+      extractSrt(captionUrl)
+        .then((extractedCaptions) => {
+          console.log("Extracted captions:", extractedCaptions);
+          setCaptions(extractedCaptions);
+        })
+        .catch((error) => {
+          console.error("Error extracting captions:", error);
+        });
+    }
+  }, [captionUrl]);
+
+  useEffect(() => {
+    const main = mainRef.current;
+    const sign = signRef.current;
+    if (!main || (!sign && !captionUrl)) return;
+
+    let raf = 0;
+    const DRIFT_THRESHOLD = 0.25;
+    const tick = async () => {
+      const t = main.currentTime || 0;
+      setMainTime(t);
+
+      // Handle caption-based pose rendering
+      if (captionUrl && captions.length > 0) {
+        const caption = findCurrentCaption(t, captions);
+        if (caption && caption.caption !== currentCaption) {
+          setCurrentCaption(caption.caption);
+          const poseFileData = await fetchPoseData(caption.caption);
+          if (poseFileData) {
+            setPoseData(poseFileData);
+          }
+        } else if (!caption && currentCaption) {
+          setCurrentCaption("");
+          setPoseData(null);
+        }
+      }
+
+      // Handle sign video sync (existing logic)
+      if (sign) {
+        const desired = t + simOffset;
+        const current = sign.currentTime || 0;
+        const drift = desired - current;
+        if (Math.abs(drift) > DRIFT_THRESHOLD) {
+          sign.currentTime = Math.max(0, desired);
+        }
+      }
+
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [simOffset, hasVideo, hasSignVideo, captionUrl, captions, currentCaption]);
 
   return (
     <section className="space-y-4">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <div className="order-1 lg:order-1 aspect-video rounded-lg overflow-hidden relative border bg-background">
-          {hasSignVideo ? (
+          {captionUrl && captions.length > 0 ? (
+            // Pose viewer for caption-based rendering
+            <>
+              {createElement("pose-viewer", {
+                className: "w-full h-full",
+                "src": poseData,
+                "aria-label": "Sign language pose viewer",
+                // loop:"true",
+              })}
+              <div className="absolute inset-x-0 top-0 bg-black/40 text-white text-xs px-3 py-1">
+                {"Pose Simulation — synchronized with captions"}
+              </div>
+              {currentCaption && (
+                <div className="absolute inset-x-0 bottom-0 bg-black/50 text-white text-xs px-3 py-2">
+                  {currentCaption}
+                </div>
+              )}
+            </>
+          ) : hasSignVideo ? (
             <video
               ref={signRef}
               className="w-full h-full"
@@ -132,7 +234,14 @@ export default function WatchView({
               aria-label="Sign language simulation video"
             >
               <source src={signVideoUrl!} type="video/mp4" />
-              {signCaptionUrl ? <track src={signCaptionUrl} kind="captions" srcLang="en" label="English" /> : null}
+              {signCaptionUrl ? (
+                <track
+                  src={signCaptionUrl}
+                  kind="captions"
+                  srcLang="en"
+                  label="English"
+                />
+              ) : null}
               {"Your browser does not support the video tag!"}
             </video>
           ) : (
@@ -167,13 +276,24 @@ export default function WatchView({
               aria-label="Main source video"
             >
               <source src={videoUrl!} type="video/mp4" />
-              {captionUrl ? <track src={captionUrl} kind="captions" srcLang="en" label="English" default /> : null}
+              {captionUrl ? (
+                <track
+                  src={captionUrl}
+                  kind="captions"
+                  srcLang="en"
+                  label="English"
+                  default
+                />
+              ) : null}
               {"Your browser does not support the video tag!"}
             </video>
           ) : (
             <>
               <Image
-                src={posterUrl || "/placeholder.svg?height=720&width=1280&query=video%20placeholder"}
+                src={
+                  posterUrl ||
+                  "/placeholder.svg?height=720&width=1280&query=video%20placeholder"
+                }
                 alt="Video unavailable"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
@@ -193,7 +313,9 @@ export default function WatchView({
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap items-center gap-3">
           <div className="min-w-40">
-            <label className="block text-sm font-medium mb-1">{"Playback speed"}</label>
+            <label className="block text-sm font-medium mb-1">
+              {"Playback speed"}
+            </label>
             <Select value={speed} onValueChange={setSpeed}>
               <SelectTrigger aria-label="Select playback speed">
                 <SelectValue placeholder="1.0x" />
@@ -210,13 +332,20 @@ export default function WatchView({
           </div>
 
           <div className="min-w-40">
-            <label className="block text-sm font-medium mb-1">{"Sync strategy"}</label>
-            <Select value={syncMode} onValueChange={(v) => setSyncMode(v as "adjust" | "pause")}>
+            <label className="block text-sm font-medium mb-1">
+              {"Sync strategy"}
+            </label>
+            <Select
+              value={syncMode}
+              onValueChange={(v) => setSyncMode(v as "adjust" | "pause")}
+            >
               <SelectTrigger aria-label="Select sync strategy">
                 <SelectValue placeholder="Adjust speed (default)" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="adjust">{"Adjust speed (default)"}</SelectItem>
+                <SelectItem value="adjust">
+                  {"Adjust speed (default)"}
+                </SelectItem>
                 <SelectItem value="pause">{"Pause to match"}</SelectItem>
               </SelectContent>
             </Select>
@@ -224,7 +353,11 @@ export default function WatchView({
 
           {syncMode === "pause" ? (
             <div className="flex items-end">
-              <Button variant="outline" onClick={pauseBoth} disabled={!hasVideo && !hasSignVideo}>
+              <Button
+                variant="outline"
+                onClick={pauseBoth}
+                disabled={!hasVideo && !hasSignVideo}
+              >
                 {"Pause both now"}
               </Button>
             </div>
@@ -232,14 +365,18 @@ export default function WatchView({
         </div>
 
         <p className="text-xs text-muted-foreground">
-          {"Both videos follow the same speed. Use offset below for fine alignment."}
+          {
+            "Both videos follow the same speed. Use offset below for fine alignment."
+          }
         </p>
       </div>
 
       <div className="rounded-lg border p-3">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex-1 min-w-[220px]">
-            <label className="block text-sm font-medium mb-1">{"Simulation offset (lead/lag)"}</label>
+            <label className="block text-sm font-medium mb-1">
+              {"Simulation offset (lead/lag)"}
+            </label>
             <Slider
               value={[simOffset]}
               min={-2}
@@ -248,18 +385,28 @@ export default function WatchView({
               onValueChange={(v) => setSimOffset(v[0] ?? 0)}
               aria-label="Simulation offset seconds"
             />
-            <span className="text-xs text-muted-foreground">{formatOffset(simOffset)}</span>
+            <span className="text-xs text-muted-foreground">
+              {formatOffset(simOffset)}
+            </span>
           </div>
 
           <div className="flex items-center gap-2">
-            <Switch id="sim-grid" checked={showGrid} onCheckedChange={setShowGrid} />
+            <Switch
+              id="sim-grid"
+              checked={showGrid}
+              onCheckedChange={setShowGrid}
+            />
             <label htmlFor="sim-grid" className="text-sm">
               {"Grid (visual aid)"}
             </label>
           </div>
 
           <div className="flex items-center gap-2">
-            <Switch id="sim-contrast" checked={highContrast} onCheckedChange={setHighContrast} />
+            <Switch
+              id="sim-contrast"
+              checked={highContrast}
+              onCheckedChange={setHighContrast}
+            />
             <label htmlFor="sim-contrast" className="text-sm">
               {"High contrast (visual aid)"}
             </label>
@@ -270,9 +417,9 @@ export default function WatchView({
               variant="ghost"
               size="sm"
               onClick={() => {
-                setSimOffset(0)
-                setShowGrid(false)
-                setHighContrast(false)
+                setSimOffset(0);
+                setShowGrid(false);
+                setHighContrast(false);
               }}
             >
               {"Reset"}
@@ -281,5 +428,5 @@ export default function WatchView({
         </div>
       </div>
     </section>
-  )
+  );
 }
