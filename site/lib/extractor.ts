@@ -8,13 +8,13 @@ type srt = {
 export async function extractSrt(captionUrl: string): Promise<srt[]> {
   const response = await fetch(captionUrl);
   const inputSrt = await response.text();
-  let srtString = inputSrt.replaceAll("\r", "").split("\n\n");
+  const srtString = inputSrt.replaceAll("\r", "").split("\n\n");
   console.log(srtString);
 
   return srtString
     .map((item) => {
       const regex = /(\d+)\n([\d:,]+)\s*-+>\s*([\d:,]+)(?:\n([\S\s]*))?/g;
-      let match = regex.exec(item);
+      const match = regex.exec(item);
       if (match === null) {
         console.log("Invalid SRT format:", item);
         return;

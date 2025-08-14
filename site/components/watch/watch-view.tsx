@@ -1,6 +1,13 @@
 "use client";
 
-import { createElement, useEffect, useMemo, useRef, useState } from "react";
+import {
+  createElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,19 +21,25 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { extractSrt } from "@/lib/extractor";
 
+type CaptionType = {
+  sequence: number;
+  start_time: string;
+  end_time: string;
+  caption: string;
+};
+
 type WatchViewProps = {
   videoId?: string;
-  videoUrl?: string | null;
+  videoUrl?: string | "/test.mp4";
   captionUrl?: string | null;
   posterUrl?: string | null;
 
-  signVideoUrl?: string | null;
+  signVideoUrl?: string | "/test.mp4";
   signCaptionUrl?: string | null;
   initialSpeed?: number;
 };
 
 export default function WatchView({
-  videoId = "1",
   videoUrl,
   captionUrl,
   posterUrl,
@@ -43,18 +56,11 @@ export default function WatchView({
   const [syncMode, setSyncMode] = useState<"adjust" | "pause">("adjust");
   const [speed, setSpeed] = useState<string>(() => `${initialSpeed}`);
   const numericSpeed = useMemo(() => Number.parseFloat(speed) || 1.0, [speed]);
-  const [captions, setCaptions] = useState<
-    {
-      sequence: number;
-      start_time: string;
-      end_time: string;
-      caption: string;
-    }[]
-  >([]);
+  const [captions, setCaptions] = useState<CaptionType[]>([]);
   const [currentCaption, setCurrentCaption] = useState<string>("");
-  const [poseData, setPoseData] = useState<any>(null);
+  const [poseData, setPoseData] = useState<string | null>(null);
 
-  const [mainTime, setMainTime] = useState<number>(0);
+  const [_mainTime, setMainTime] = useState<number>(0);
 
   const [simOffset, setSimOffset] = useState<number>(0);
   const [showGrid, setShowGrid] = useState<boolean>(false);
@@ -93,13 +99,13 @@ export default function WatchView({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [simOffset, hasVideo, hasSignVideo]);
+  }, [simOffset]);
   const formatOffset = (sec: number) => {
     if (sec === 0) return "0.0s";
     return `${sec > 0 ? "+" : ""}${sec.toFixed(1)}s`;
   };
 
-  const timeStringToSeconds = (timeString: string): number => {
+  const timeStringToSeconds = useCallback((timeString: string): number => {
     const [hours, minutes, seconds] = timeString.split(":");
     const [sec, ms] = seconds.split(",");
     return (
@@ -108,51 +114,62 @@ export default function WatchView({
       parseInt(sec) +
       parseInt(ms) / 1000
     );
-  };
+  }, []);
 
-  const findCurrentCaption = (
-    currentTime: number,
-    captionsC: typeof captions
-  ) => {
-    return captionsC.find((caption) => {
-      const startTime = timeStringToSeconds(caption.start_time);
-      const endTime = timeStringToSeconds(caption.end_time);
-      return currentTime >= startTime && currentTime <= endTime;
-    });
-  };
-  const fetchPoseData = async (caption: string) => {
-    try {
-      // Replace with your actual API endpoint
-      const response = await fetch(`https://us-central1-sign-mt.cloudfunctions.net/spoken_text_to_signed_pose?text=${encodeURI(caption)}&spoken=en&signed=ase`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+  const findCurrentCaption = useCallback(
+    (
+      currentTime: number,
+      captionsC: CaptionType[]
+    ): CaptionType | undefined => {
+      return captionsC.find((caption) => {
+        const startTime = timeStringToSeconds(caption.start_time);
+        const endTime = timeStringToSeconds(caption.end_time);
+        return currentTime >= startTime && currentTime <= endTime;
       });
-      if (!response.ok) {
-      throw new Error('Failed to fetch pose file')
-    }
-    
-    // Get the pose file as a blob
-    const poseFileBlob = await response.blob()
-    
-    // Create a temporary URL for the file
-    const fileUrl = URL.createObjectURL(poseFileBlob)
-    
-    return fileUrl;
-    } catch (error) {
-      console.error("Error fetching pose data:", error);
-      return null;
-    }
-  };
+    },
+    [timeStringToSeconds]
+  );
+
+  const fetchPoseData = 
+    async (caption: string): Promise<string | null> => {
+      console.log("Fetching pose data for caption:", caption);
+      if(!caption) return null;
+      try {
+        const response = await fetch(
+          `https://us-central1-sign-mt.cloudfunctions.net/spoken_text_to_signed_pose?text=${encodeURI(
+            caption
+          )}&spoken=en&signed=ase`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch pose file");
+        }
+
+        const poseFileBlob = await response.blob();
+        const fileUrl = URL.createObjectURL(poseFileBlob);
+
+        return fileUrl;
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error("Error fetching pose data:", error);
+        return null;
+      }
+    };
 
   useEffect(() => {
     if (captionUrl) {
       extractSrt(captionUrl)
-        .then((extractedCaptions) => {
+        .then((extractedCaptions: CaptionType[]) => {
+          // eslint-disable-next-line no-console
           console.log("Extracted captions:", extractedCaptions);
           setCaptions(extractedCaptions);
         })
-        .catch((error) => {
+        .catch((error: unknown) => {
+          // eslint-disable-next-line no-console
           console.error("Error extracting captions:", error);
         });
     }
@@ -198,7 +215,14 @@ export default function WatchView({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [simOffset, hasVideo, hasSignVideo, captionUrl, captions, currentCaption]);
+  }, [
+    // simOffset,
+    captionUrl,
+    captions,
+    currentCaption,
+    // fetchPoseData,
+    // findCurrentCaption,
+  ]);
 
   return (
     <section className="space-y-4">
@@ -207,12 +231,12 @@ export default function WatchView({
           {captionUrl && captions.length > 0 ? (
             // Pose viewer for caption-based rendering
             <>
-              {createElement("pose-viewer", {
-                className: "w-full h-full",
-                "src": poseData,
-                "aria-label": "Sign language pose viewer",
-                // loop:"true",
-              })}
+              { createElement("pose-viewer", {
+                  className: "w-full h-full",
+                  src: "/test/shape.pose",
+                  "aria-label": "Sign language pose viewer",
+                  loop:"true",
+                })}
               <div className="absolute inset-x-0 top-0 bg-black/40 text-white text-xs px-3 py-1">
                 {"Pose Simulation — synchronized with captions"}
               </div>
@@ -223,27 +247,29 @@ export default function WatchView({
               )}
             </>
           ) : hasSignVideo ? (
-            <video
-              ref={signRef}
-              className="w-full h-full"
-              controls={false}
-              muted
-              playsInline
-              preload="metadata"
-              poster="/placeholder.svg?height=720&width=1280"
-              aria-label="Sign language simulation video"
-            >
-              <source src={signVideoUrl!} type="video/mp4" />
-              {signCaptionUrl ? (
-                <track
-                  src={signCaptionUrl}
-                  kind="captions"
-                  srcLang="en"
-                  label="English"
-                />
-              ) : null}
-              {"Your browser does not support the video tag!"}
-            </video>
+            <>
+              <video
+                ref={signRef}
+                className="w-full h-full"
+                controls={false}
+                muted
+                playsInline
+                preload="metadata"
+                poster="/placeholder.svg?height=720&width=1280"
+                aria-label="Sign language simulation video"
+              >
+                <source src={signVideoUrl} type="video/mp4" />
+                {signCaptionUrl ? (
+                  <track
+                    src={signCaptionUrl}
+                    kind="captions"
+                    srcLang="en"
+                    label="English"
+                  />
+                ) : null}
+                {"Your browser does not support the video tag!"}
+              </video>
+            </>
           ) : (
             <>
               <Image
@@ -266,27 +292,32 @@ export default function WatchView({
 
         <div className="order-2 lg:order-2 aspect-video rounded-lg overflow-hidden bg-black relative">
           {hasVideo ? (
-            <video
-              ref={mainRef}
-              className="w-full h-full"
-              controls
-              preload="metadata"
-              playsInline
-              poster={posterUrl ?? undefined}
-              aria-label="Main source video"
-            >
-              <source src={videoUrl!} type="video/mp4" />
-              {captionUrl ? (
+            <>
+              <video
+                ref={mainRef}
+                className="w-full h-full"
+                controls
+                preload="metadata"
+                playsInline
+                poster={posterUrl ?? undefined}
+                aria-label="Main source video"
+              >
+                <source src={videoUrl} type="video/mp4" />
                 <track
-                  src={captionUrl}
+                  src={captionUrl || undefined}
                   kind="captions"
                   srcLang="en"
                   label="English"
                   default
                 />
-              ) : null}
-              {"Your browser does not support the video tag!"}
-            </video>
+              </video>
+              {!captionUrl && (
+                <div className="text-xs text-red-600">
+                  No captions available for this video.
+                </div>
+              )}
+              <div>{"Your browser does not support the video tag!"}</div>
+            </>
           ) : (
             <>
               <Image
@@ -313,7 +344,7 @@ export default function WatchView({
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap items-center gap-3">
           <div className="min-w-40">
-            <label className="block text-sm font-medium mb-1">
+            <label htmlFor="speed" className="block text-sm font-medium mb-1">
               {"Playback speed"}
             </label>
             <Select value={speed} onValueChange={setSpeed}>
@@ -332,12 +363,14 @@ export default function WatchView({
           </div>
 
           <div className="min-w-40">
-            <label className="block text-sm font-medium mb-1">
+            <label htmlFor="sync" className="block text-sm font-medium mb-1">
               {"Sync strategy"}
             </label>
             <Select
               value={syncMode}
-              onValueChange={(v) => setSyncMode(v as "adjust" | "pause")}
+              onValueChange={(v: string) =>
+                setSyncMode(v as "adjust" | "pause")
+              }
             >
               <SelectTrigger aria-label="Select sync strategy">
                 <SelectValue placeholder="Adjust speed (default)" />
@@ -374,7 +407,10 @@ export default function WatchView({
       <div className="rounded-lg border p-3">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex-1 min-w-[220px]">
-            <label className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="sim-offset"
+              className="block text-sm font-medium mb-1"
+            >
               {"Simulation offset (lead/lag)"}
             </label>
             <Slider
@@ -382,7 +418,7 @@ export default function WatchView({
               min={-2}
               max={2}
               step={0.1}
-              onValueChange={(v) => setSimOffset(v[0] ?? 0)}
+              onValueChange={(v: number[]) => setSimOffset(v[0] ?? 0)}
               aria-label="Simulation offset seconds"
             />
             <span className="text-xs text-muted-foreground">

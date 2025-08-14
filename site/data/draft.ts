@@ -552,7 +552,7 @@ export const updateVideoWatchData = (videoId: string | number, watchData: Partia
       ...video,
       ...watchData,
       lastWatchedAt: new Date(),
-      addedToHistoryAt: (video as any).addedToHistoryAt || new Date(),
+      addedToHistoryAt: video.addedToHistoryAt?? new Date(),
     }
   }
   return null

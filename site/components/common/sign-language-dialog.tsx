@@ -44,7 +44,7 @@ export default function SignLanguageDialog({ isCameraModalOpen, setIsCameraModal
       stopRecognition()
       setStreaming(false)
     }
-  }, [isCameraModalOpen])
+  }, [isCameraModalOpen, stopRecognition, startRecognition])
 
   const handleClose = (open: boolean) => {
     setIsCameraModalOpen(open)

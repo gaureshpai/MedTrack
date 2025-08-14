@@ -23,7 +23,7 @@ export default function LikeButton({ videoId, baseCount = 0, initialLiked = fals
         setCount((c) => c + (initialLiked ? 0 : 1))
       }
     } catch {}
-  }, [storageKey])
+  }, [storageKey, liked, initialLiked])
 
   function toggle() {
     setLiked((prev) => {

@@ -24,6 +24,17 @@ type UseSignLanguageOptions = {
   cooldownMs?: number
 }
 
+declare interface WasmFileset {
+    /** The path to the Wasm loader script. */
+    wasmLoaderPath: string;
+    /** The path to the Wasm binary. */
+    wasmBinaryPath: string;
+    /** The optional path to the asset loader script. */
+    assetLoaderPath?: string;
+    /** The optional path to the assets binary. */
+    assetBinaryPath?: string;
+}
+
 export function useSignLanguage(options: UseSignLanguageOptions) {
   const { videoRef, onRecognizedWord, confidenceThreshold = 0.7, stableFrames = 5, cooldownMs = 1200 } = options
 
@@ -33,13 +44,14 @@ export function useSignLanguage(options: UseSignLanguageOptions) {
   const [lastWord, setLastWord] = useState<string | null>(null)
 
   const streamRef = useRef<MediaStream | null>(null)
-  const visionRef = useRef<any | null>(null)
+  const visionRef = useRef<WasmFileset | null>(null)
   const recognizerRef = useRef<GestureRecognizer | null>(null)
   const rafRef = useRef<number | null>(null)
 
   const lastGestureRef = useRef<string | null>(null)
   const sameCountRef = useRef<number>(0)
   const lastAppendAtRef = useRef<number>(0)
+  const lastTimestampRef = useRef<number>(0)
 
   const loadModel = useCallback(async () => {
     setLoading(true)
@@ -60,11 +72,11 @@ export function useSignLanguage(options: UseSignLanguageOptions) {
       })
       recognizerRef.current = recognizer
       setLoading(false)
-    } catch (e: any) {
-      console.error("Failed to load gesture model:", e)
+    } catch (error) {
+      console.error("Failed to load gesture model:", error)
       setError("Failed to load gesture model. Check your internet connection.")
       setLoading(false)
-      throw e
+      throw error
     }
   }, [])
 
@@ -77,10 +89,10 @@ export function useSignLanguage(options: UseSignLanguageOptions) {
         videoRef.current.srcObject = stream
         await videoRef.current.play()
       }
-    } catch (e: any) {
-      console.error("Error accessing camera:", e)
+    } catch (error) {
+      console.error("Error accessing camera:", error)
       setError("Camera access denied or unavailable.")
-      throw e
+      throw error
     }
   }, [videoRef])
 
@@ -92,7 +104,7 @@ export function useSignLanguage(options: UseSignLanguageOptions) {
     if (videoRef.current) {
       try {
         videoRef.current.pause()
-      } catch { }
+      } catch {}
       videoRef.current.srcObject = null
     }
   }, [videoRef])
@@ -102,11 +114,15 @@ export function useSignLanguage(options: UseSignLanguageOptions) {
     const recognizer = recognizerRef.current
     if (!videoEl || !recognizer) return
 
-    const nowMs = Date.now()
+    // Ensure monotonically increasing timestamps
+    const currentTime = performance.now()
+    const nowMs = Math.max(currentTime, lastTimestampRef.current + 1)
+    lastTimestampRef.current = nowMs
+
     let result: GestureRecognizerResult | undefined
     try {
       result = recognizer.recognizeForVideo(videoEl, nowMs)
-    } catch (e) { }
+    } catch (_e) {}
 
     if (result?.gestures?.length) {
       const top = result.gestures[0][0]
@@ -143,6 +159,10 @@ export function useSignLanguage(options: UseSignLanguageOptions) {
       await loadModel()
     }
     await startCamera()
+
+    // Reset timestamp tracking
+    lastTimestampRef.current = 0
+
     if (rafRef.current) cancelAnimationFrame(rafRef.current)
     rafRef.current = requestAnimationFrame(recognizeFrame)
   }, [loadModel, recognizeFrame, startCamera])
@@ -160,7 +180,7 @@ export function useSignLanguage(options: UseSignLanguageOptions) {
       recognizerRef.current = null
       visionRef.current = null
     }
-  }, [])
+  }, [stop])
 
   return {
     loading,
