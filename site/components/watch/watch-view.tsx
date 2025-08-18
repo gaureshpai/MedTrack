@@ -58,7 +58,7 @@ export default function WatchView({
   const numericSpeed = useMemo(() => Number.parseFloat(speed) || 1.0, [speed]);
   const [captions, setCaptions] = useState<CaptionType[]>([]);
   const [currentCaption, setCurrentCaption] = useState<string>("");
-  const [poseData, setPoseData] = useState<string | null>(null);
+  const [_poseData, setPoseData] = useState<string | null>(null);
 
   const [_mainTime, setMainTime] = useState<number>(0);
 
