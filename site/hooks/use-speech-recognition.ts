@@ -8,8 +8,9 @@ type UseSpeechRecognitionOptions = {
   interimResults?: boolean;
   onResult?: (text: string, isFinal: boolean) => void;
 };
+export type { UseSpeechRecognitionOptions as UseSignLanguageOptions };
 
-type UseSpeechRecognitionReturn = {
+export type UseSpeechRecognitionReturn = {
   supported: boolean;
   listening: boolean;
   interimTranscript: string;
@@ -20,27 +21,27 @@ type UseSpeechRecognitionReturn = {
   reset: () => void;
 };
 
-interface SpeechRecognitionEvent extends Event {
+export interface SpeechRecognitionEvent extends Event {
   resultIndex: number;
   results: SpeechRecognitionResultList;
 }
 
-interface SpeechRecognitionResultList {
+export interface SpeechRecognitionResultList {
   length: number;
   [index: number]: SpeechRecognitionResult;
 }
 
-interface SpeechRecognitionResult {
+export interface SpeechRecognitionResult {
   isFinal: boolean;
   length: number;
   [index: number]: SpeechRecognitionAlternative;
 }
 
-interface SpeechRecognitionAlternative {
+export interface SpeechRecognitionAlternative {
   transcript: string;
 }
 
-interface SpeechRecognition extends EventTarget {
+export interface SpeechRecognition extends EventTarget {
   lang: string;
   continuous: boolean;
   interimResults: boolean;
@@ -51,11 +52,10 @@ interface SpeechRecognition extends EventTarget {
   start: () => void;
   stop: () => void;
   abort?: () => void;
-  // Custom property for restart logic
   _shouldRestart?: boolean;
 }
 
-interface SpeechRecognitionErrorEvent extends Event {
+export interface SpeechRecognitionErrorEvent extends Event {
   error: string;
 }
 
