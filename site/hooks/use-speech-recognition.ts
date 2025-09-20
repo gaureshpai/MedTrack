@@ -83,18 +83,45 @@ export function useSpeechRecognition(
     const speechWindow = window as typeof window & {
       SpeechRecognition?: new () => SpeechRecognition;
       webkitSpeechRecognition?: new () => SpeechRecognition;
+      mozSpeechRecognition?: new () => SpeechRecognition;
+      msSpeechRecognition?: new () => SpeechRecognition;
     };
+    
+    // Try multiple browsers and fallbacks
     const SR =
       typeof window !== "undefined" &&
-      (speechWindow.SpeechRecognition || speechWindow.webkitSpeechRecognition);
+      (
+        speechWindow.SpeechRecognition || 
+        speechWindow.webkitSpeechRecognition || 
+        speechWindow.mozSpeechRecognition || 
+        speechWindow.msSpeechRecognition
+      );
 
     setSupported(Boolean(SR));
-    if (!SR) return;
+    if (!SR) {
+      console.warn('[Speech Recognition] No native support found. Browser compatibility:', {
+        userAgent: navigator.userAgent,
+        isChrome: /Chrome/.test(navigator.userAgent),
+        isFirefox: /Firefox/.test(navigator.userAgent),
+        isSafari: /Safari/.test(navigator.userAgent),
+        isEdge: /Edge/.test(navigator.userAgent)
+      });
+      return;
+    }
 
     const recognition: SpeechRecognition = new SR();
     recognition.lang = lang;
     recognition.continuous = continuous;
     recognition.interimResults = interimResults;
+    
+    // Add additional browser-specific configurations
+    if ('maxAlternatives' in recognition) {
+      (recognition as any).maxAlternatives = 1;
+    }
+    if ('serviceURI' in recognition) {
+      // For browsers that support custom service URI
+      (recognition as any).serviceURI = 'wss://www.google.com/speech-api/v2/recognize';
+    }
 
     recognition.onstart = () => {
       setListening(true);
@@ -181,23 +208,52 @@ export function useSpeechRecognition(
   const start = useCallback(async () => {
     setError(null);
     setInterimTranscript("");
+    
+    // Check for HTTPS requirement
+    if (typeof window !== 'undefined' && window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+      setError('Speech recognition requires HTTPS or localhost');
+      throw new Error('HTTPS required for speech recognition');
+    }
+    
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch {
+    } catch (micError) {
+      console.error('[Speech Recognition] Microphone access denied:', micError);
       setError("not-allowed");
       throw new Error("Mic permission not granted");
     }
 
     const recognition = recognitionRef.current;
-    if (!recognition) return;
+    if (!recognition) {
+      setError('Speech recognition not initialized');
+      return;
+    }
 
     try {
       if (recognitionRef.current) {
         recognitionRef.current._shouldRestart = true;
       }
-      recognition.start();
-      setListening(true);
+      
+      // Add timeout for start attempt
+      const startPromise = new Promise<void>((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          reject(new Error('Speech recognition start timeout'));
+        }, 10000); // 10 second timeout
+        
+        recognition.onstart = () => {
+          clearTimeout(timeout);
+          setListening(true);
+          lastErrorRef.current = null;
+          resolve();
+        };
+        
+        recognition.start();
+      });
+      
+      await startPromise;
+      
     } catch (err: unknown) {
+      console.error('[Speech Recognition] Start error:', err);
       if (
         typeof err === "object" &&
         err !== null &&

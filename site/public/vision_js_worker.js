@@ -1,1 +1,0 @@
-Couldn't find the requested file /wasm/vision_js_worker.js in @mediapipe/tasks-vision.

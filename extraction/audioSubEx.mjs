@@ -1,7 +1,7 @@
 import { AssemblyAI } from "assemblyai";
 
 const client = new AssemblyAI({
-  apiKey: "04e70319f6544f1f829521d725acedfe",
+  apiKey: process.env.ASSEMBLYAI_API_KEY,
 });
 
 // const audioFile = "./local_file.mp3";

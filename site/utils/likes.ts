@@ -2,8 +2,11 @@
 
 import { db, type Prisma } from "@/utils/prisma";
 
-export async function getLikes() {
+export async function getLikes(page = 1, limit = 100) {
+  const skip = (page - 1) * limit;
   return await db.like.findMany({
+    skip,
+    take: limit,
     include: {
       user: true,
       video: true,
@@ -35,9 +38,12 @@ export async function getUserLikes(userId: string) {
   });
 }
 
-export async function getVideoLikes(videoId: string) {
+export async function getVideoLikes(videoId: string, page = 1, limit = 50) {
+  const skip = (page - 1) * limit;
   return await db.like.findMany({
     where: { videoId },
+    skip,
+    take: limit,
     include: {
       user: true,
     },
@@ -94,16 +100,31 @@ export async function deleteLike(id: string) {
 }
 
 export async function toggleLike(userId: string, videoId: string) {
-  const existingLike = await checkLike(userId, videoId);
-
-  if (existingLike) {
-    await deleteLike(existingLike.id);
-    return { liked: false, like: null };
-  } else {
-    const newLike = await createLike({
-      user: { connect: { id: userId } },
-      video: { connect: { id: videoId } },
+  return await db.$transaction(async (tx) => {
+    const existingLike = await tx.like.findFirst({
+      where: { userId, videoId },
     });
-    return { liked: true, like: newLike };
-  }
+
+    if (existingLike) {
+      await tx.like.delete({ where: { id: existingLike.id } });
+      await tx.video.update({
+        where: { id: videoId },
+        data: { likes: { decrement: 1 } },
+      });
+      return { liked: false, like: null };
+    } else {
+      const newLike = await tx.like.create({
+        data: {
+          user: { connect: { id: userId } },
+          video: { connect: { id: videoId } },
+        },
+        include: { user: true, video: true },
+      });
+      await tx.video.update({
+        where: { id: videoId },
+        data: { likes: { increment: 1 } },
+      });
+      return { liked: true, like: newLike };
+    }
+  });
 }

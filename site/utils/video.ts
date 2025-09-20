@@ -62,12 +62,18 @@ export async function getVideosByCategory(category: string) {
 }
 
 export async function searchVideos(query: string) {
+  // Sanitize and validate query
+  const sanitizedQuery = query.trim();
+  if (!sanitizedQuery || sanitizedQuery.length > 100) {
+    throw new Error('Search query too long');
+  }
+
   return await db.video.findMany({
     where: {
       OR: [
-        { title: { contains: query, mode: "insensitive" } },
-        { description: { contains: query, mode: "insensitive" } },
-        { tags: { hasSome: [query] } },
+        { title: { contains: sanitizedQuery, mode: "insensitive" } },
+        { description: { contains: sanitizedQuery, mode: "insensitive" } },
+        { tags: { hasSome: [sanitizedQuery] } },
       ],
     },
     include: {
@@ -113,15 +119,29 @@ export async function incrementVideoViews(id: string) {
 }
 
 export async function incrementVideoLikes(id: string) {
-  return await db.video.update({
-    where: { id },
-    data: { likes: { increment: 1 } },
-  });
+  try {
+    return await db.video.update({
+      where: { id },
+      data: { likes: { increment: 1 } },
+    });
+  } catch (error) {
+    console.error('Failed to increment video likes:', error);
+    throw error;
+  }
 }
 
 export async function decrementVideoLikes(id: string) {
-  return await db.video.update({
-    where: { id },
-    data: { likes: { decrement: 1 } },
-  });
+  try {
+    const video = await db.video.findUnique({ where: { id }, select: { likes: true } });
+    if (!video || video.likes <= 0) {
+      throw new Error('Cannot decrement likes below zero');
+    }
+    return await db.video.update({
+      where: { id },
+      data: { likes: { decrement: 1 } },
+    });
+  } catch (error) {
+    console.error('Failed to decrement video likes:', error);
+    throw error;
+  }
 }

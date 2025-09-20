@@ -45,45 +45,32 @@ export async function getUserHistory(userId: string, limit?: number) {
 }
 
 export async function createHistoryEntry(history: Prisma.HistoryCreateInput) {
-  const existingEntry = await db.history.findFirst({
+  const userId = typeof history.user === "object" && "connect" in history.user
+    ? history.user.connect?.id
+    : undefined;
+  const videoId = typeof history.video === "object" && "connect" in history.video
+    ? history.video.connect?.id
+    : undefined;
+
+  if (!userId || !videoId) {
+    throw new Error("userId and videoId are required for history operations");
+  }
+
+  return await db.history.upsert({
     where: {
-      userId:
-        typeof history.user === "object" && "connect" in history.user
-          ? history.user.connect?.id
-          : undefined,
-      videoId:
-        typeof history.video === "object" && "connect" in history.video
-          ? history.video.connect?.id
-          : undefined,
+      userId_videoId: { userId, videoId }
+    },
+    update: { watchedAt: new Date() },
+    create: history,
+    include: {
+      user: true,
+      video: {
+        include: {
+          uploader: true,
+        },
+      },
     },
   });
-
-  if (existingEntry) {
-    return await db.history.update({
-      where: { id: existingEntry.id },
-      data: { watchedAt: new Date() },
-      include: {
-        user: true,
-        video: {
-          include: {
-            uploader: true,
-          },
-        },
-      },
-    });
-  } else {
-    return await db.history.create({
-      data: history,
-      include: {
-        user: true,
-        video: {
-          include: {
-            uploader: true,
-          },
-        },
-      },
-    });
-  }
 }
 
 export async function deleteHistoryEntry(id: string) {

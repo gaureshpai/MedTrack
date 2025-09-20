@@ -56,9 +56,20 @@ export default function VoiceSearchDialog({ open, onOpenChange, onTranscriptChan
 
         {!supported ? (
           <div className="py-6 text-center space-y-3">
-            <p className="text-sm text-gray-600">
-              Your browser does not support Speech Recognition. Please try Chrome on a secure (HTTPS) site.
+            <p className="text-sm text-gray-600 mb-3">
+              Speech Recognition is not available in your current browser.
             </p>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-left text-sm">
+              <div className="font-medium text-blue-800 mb-2">Supported Browsers:</div>
+              <ul className="text-blue-700 space-y-1">
+                <li>• Chrome (recommended)</li>
+                <li>• Edge (latest versions)</li>
+                <li>• Safari (iOS 14.5+)</li>
+              </ul>
+              <div className="mt-2 text-blue-600">
+                <strong>Note:</strong> HTTPS is required for this feature.
+              </div>
+            </div>
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Close
             </Button>

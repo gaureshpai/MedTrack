@@ -17,9 +17,9 @@ const Library = () => {
   const sortedVideos = [...libraryVideos].sort((a, b) => {
     switch (sortBy) {
       case 'recent':
-        return a.time.localeCompare(b.time);
-      case 'oldest':
         return b.time.localeCompare(a.time);
+      case 'oldest':
+        return a.time.localeCompare(b.time);
       case 'title':
         return a.title.localeCompare(b.title);
       default:

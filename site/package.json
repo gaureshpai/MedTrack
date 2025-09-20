@@ -9,19 +9,8 @@
 		"format": "biome format",
 		"db:push": "prisma db push",
 		"db:generate": "prisma generate",
-		"format:write": "biome format --write",
-		"lint": "biome lint",
-		"lint:write": "biome lint --write",
-		"type-check": "tsc --noEmit",
-		"format-git": "biome format --write .",
-		"lint-git": "biome lint .",
-		"lint-git:fix": "biome lint --write ."
-	},
-	"lint-staged": {
-		"*.{js,jsx,ts,tsx,json}": [
-			"biome format --write",
-			"biome lint"
-		]
+		"download:models": "node scripts/download-models.js",
+		"setup:ai": "npm run download:models"
 	},
 	"dependencies": {
 		"@mediapipe/tasks-vision": "^0.10.22-rc.20250304",
@@ -47,13 +36,10 @@
 		"tailwind-merge": "^3.3.1"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.1.3",
 		"@tailwindcss/postcss": "^4.1.11",
 		"@types/node": "^24",
 		"@types/react": "^19",
 		"@types/react-dom": "^19",
-		"eslint": "9.32.0",
-		"eslint-config-next": "15.4.6",
 		"postcss": "^8.5",
 		"prisma": "^6.13.0",
 		"tailwindcss": "^4.1.11",

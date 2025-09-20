@@ -52,9 +52,11 @@ export async function createNotification(
   });
 }
 
-export async function markNotificationAsRead(id: string) {
+export async function markNotificationAsRead(id: string, userId?: string) {
+  const whereClause = userId ? { id, userId } : { id };
+  
   return await db.notification.update({
-    where: { id },
+    where: whereClause,
     data: { isRead: true },
   });
 }
