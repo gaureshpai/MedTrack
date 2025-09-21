@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Navbar from "@/components/common/Navbar";
 
 export const metadata: Metadata = {
-	title: "SignFlix - Video Streaming with Sign Language",
+	title: "MedTrack - Video Streaming with Sign Language",
 	description:
 		"An accessible video streaming platform with integrated sign language interpretation for the deaf and hard-of-hearing community.",
 };

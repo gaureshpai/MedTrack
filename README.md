@@ -1,6 +1,6 @@
-# SignFlix: A Video Streaming Platform with Sign Language
+# MedTrack: A Video Streaming Platform with Sign Language
 
-SignFlix is a video streaming platform designed to improve digital accessibility for the deaf and hard-of-hearing community. It provides integrated sign language interpretation for videos, allowing users to watch content with synchronized sign language displays.
+MedTrack is a video streaming platform designed to improve digital accessibility for the deaf and hard-of-hearing community. It provides integrated sign language interpretation for videos, allowing users to watch content with synchronized sign language displays.
 
 ## Features
 
@@ -8,19 +8,19 @@ SignFlix is a video streaming platform designed to improve digital accessibility
 *   **Side-by-Side Video:** Users can view the original video and the sign language interpretation side-by-side.
 *   **Playback Control:** Users can adjust the playback speed and delay of the sign language video stream.
 *   **Caption-Driven:** The platform uses video captions to generate sign language interpretations.
-*   **Web-Based:** SignFlix is a web-based platform, accessible from any modern web browser.
+*   **Web-Based:** MedTrack is a web-based platform, accessible from any modern web browser.
 
 ## Getting Started
 
-To get started with SignFlix, you'll need to have Node.js and npm installed on your machine.
+To get started with MedTrack, you'll need to have Node.js and npm installed on your machine.
 
 1.  **Clone the repository:**
     ```
-    git clone https://github.com/gaureshpai/SignFlix.git
+    git clone https://github.com/gaureshpai/MedTrack.git
     ```
 2.  **Install dependencies:**
     ```
-    cd SignFlix/site
+    cd MedTrack/site
     npm install
     ```
 3.  **Run the development server:**

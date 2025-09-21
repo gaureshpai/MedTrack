@@ -180,7 +180,7 @@ export default function Navbar() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-red-600 text-white font-bold text-sm">
                   S
                 </div>
-                <span className="text-xl font-medium text-black hidden md:block">SignFlix</span>
+                <span className="text-xl font-medium text-black hidden md:block">MedTrack</span>
               </Link>
             </div>
 

@@ -68,7 +68,7 @@ export const subscribedChannels: Channel[] = [
   },
   {
     id: "4",
-    name: "SignFlix Originals",
+    name: "MedTrack Originals",
     avatar: "/placeholder.svg?height=40&width=40&text=SFO",
     subscribers: "3.2M",
     isVerified: true,
@@ -284,7 +284,7 @@ export const videos: Video[] = [
     duration: "14:29",
     views: "143K",
     time: "1 week ago",
-    channel: getChannelByName("SignFlix Originals"),
+    channel: getChannelByName("MedTrack Originals"),
     isSaved: true,
     ...generateWatchData(new Date(), true),
   },
@@ -345,8 +345,8 @@ export const subscriptionVideos: Video[] = [
   },
   {
     id: "sub-5",
-    title: "PREMIERE: New SignFlix Original Series Trailer",
-    thumbnail: "/placeholder.svg?height=180&width=320&text=SignFlix+Premiere",
+    title: "PREMIERE: New MedTrack Original Series Trailer",
+    thumbnail: "/placeholder.svg?height=180&width=320&text=MedTrack+Premiere",
     duration: "2:45",
     views: "45K waiting",
     time: "Premieres in 2 hours",

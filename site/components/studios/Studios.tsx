@@ -50,7 +50,7 @@ const Studio = () => {
                             <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
                                 <Camera className="w-5 h-5 text-white" />
                             </div>
-                            <h1 className="text-xl font-bold">SignFlix Studio</h1>
+                            <h1 className="text-xl font-bold">MedTrack Studio</h1>
                         </div>
                         <Badge variant="secondary">Creator Dashboard</Badge>
                     </div>
@@ -113,7 +113,7 @@ const LoginForm = ({ onLogin, setUser }: { onLogin: (status: boolean) => void; s
                     <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
                         <Camera className="w-8 h-8 text-white" />
                     </div>
-                    <CardTitle className="text-2xl">SignFlix Studio</CardTitle>
+                    <CardTitle className="text-2xl">MedTrack Studio</CardTitle>
                     <p className="text-gray-600">
                         {isSignUp ? 'Create your creator account' : 'Sign in to your creator account'}
                     </p>
