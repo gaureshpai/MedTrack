@@ -28,32 +28,31 @@ import SignLanguageDialog from "@/components/common/sign-language-dialog"
 
 export default function Navbar() {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
-  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false)
-  const [isCameraModalOpen, setIsCameraModalOpen] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isSignedIn] = useState(false)
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
   const [activeTab, setActiveTab] = useState("home")
+  const [isClient, setIsClient] = useState(false)
+  const [isVoiceModalOpen, setIsVoiceModalOpen] = useState(false)
+  const [isCameraModalOpen, setIsCameraModalOpen] = useState(false)
 
   const [searchQuery, setSearchQuery] = useState("")
   const desktopInputRef = useRef<HTMLInputElement | null>(null)
   const mobileInputRef = useRef<HTMLInputElement | null>(null)
 
-  const handleSidebarToggle = () => setIsSidebarOpen((v) => !v)
-  const closeSidebar = () => setIsSidebarOpen(false)
-  const handleMobileSearchToggle = () => setIsMobileSearchOpen((v) => !v)
-
-  useEffect(() => {
-    if (!isVoiceModalOpen) return
-    const el = isMobileSearchOpen ? mobileInputRef.current : desktopInputRef.current
-    el?.focus()
-  }, [isVoiceModalOpen, isMobileSearchOpen])
-
+  // Voice transcript handler
   const handleVoiceTranscriptChange = (text: string, isFinal: boolean) => {
-    if (!isFinal) return
+    // Show interim results too for real-time feedback
     setSearchQuery((prev) => {
-      const sep = prev && !prev.endsWith(" ") ? " " : ""
-      return `${prev}${sep}${text.trim()}`
+      if (isFinal) {
+        const sep = prev && !prev.endsWith(" ") ? " " : ""
+        return `${prev}${sep}${text.trim()}`
+      } else {
+        // For interim results, replace the last word being spoken
+        const words = prev.split(' ')
+        words[words.length - 1] = text.trim()
+        return words.join(' ')
+      }
     })
 
     const el = isMobileSearchOpen ? mobileInputRef.current : desktopInputRef.current
@@ -63,6 +62,20 @@ export default function Navbar() {
       })
     }
   }
+
+  // Since we're using modals now, we don't need direct hooks here
+  // The hooks are used within the modal components
+
+  const handleSidebarToggle = () => setIsSidebarOpen((v) => !v)
+  const closeSidebar = () => setIsSidebarOpen(false)
+  const handleMobileSearchToggle = () => setIsMobileSearchOpen((v) => !v)
+
+  // Ensure client-side only rendering for dynamic states
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+
 
   return (
     <>
@@ -81,15 +94,16 @@ export default function Navbar() {
 
             <div className="flex-1 flex items-center">
               <div className="relative flex-1">
-                <Input
-                  ref={mobileInputRef}
-                  placeholder="Search"
-                  className="w-full h-9 px-4 border border-gray-300 rounded-l-full focus:border-neutral-500 focus:ring-1 focus:ring-neutral-500 outline-none"
-                  autoFocus
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  aria-label="Search"
-                />
+                  <Input
+                    ref={mobileInputRef}
+                    className="w-full h-9 px-4 border border-gray-300 rounded-l-full focus:border-neutral-500 focus:ring-1 focus:ring-neutral-500 outline-none"
+                    autoFocus
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    aria-label="Search"
+                    placeholder={isClient && isVoiceModalOpen ? 'Voice search active...' : isClient && isCameraModalOpen ? 'Sign language active...' : 'Search'}
+                    suppressHydrationWarning
+                  />
               </div>
               <Button
                 size="icon"
@@ -105,15 +119,23 @@ export default function Navbar() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 bg-gray-100 hover:bg-gray-200 rounded-full"
-                title="Search with voice"
-                aria-label="Search with voice"
-                onClick={() => setIsVoiceModalOpen(true)}
+                className={`h-10 w-10 transition-colors rounded-full ${
+                  isClient && isVoiceModalOpen 
+                    ? 'bg-red-100 hover:bg-red-200 text-red-600' 
+                    : 'bg-gray-100 hover:bg-gray-200'
+                }`}
+                title="Voice Search - Click to start/stop voice input"
+                aria-label="Voice Search - Click to start/stop voice input"
+                onClick={() => {
+                  setIsVoiceModalOpen(true)
+                }}
               >
-                <Mic className="h-5 w-5" />
+                <Mic className={`h-5 w-5 ${isClient && isVoiceModalOpen ? 'animate-pulse' : ''}`} />
               </Button>
-              <span className="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-bold px-1 py-0.5 rounded">
-                Beta
+              <span className={`absolute -top-1 -right-1 text-[10px] font-bold px-1 py-0.5 rounded shadow ${
+                isClient && isVoiceModalOpen ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'
+              }`}>
+                {isClient && isVoiceModalOpen ? 'ON' : 'Voice'}
               </span>
             </div>
 
@@ -121,15 +143,21 @@ export default function Navbar() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 bg-gray-100 hover:bg-gray-200 rounded-full"
-                title="Search with sign language"
-                aria-label="Search with sign language"
-                onClick={() => setIsCameraModalOpen(true)}
+                className={`h-10 w-10 transition-colors rounded-full ${
+                  isClient && isCameraModalOpen 
+                    ? 'bg-green-100 hover:bg-green-200 text-green-600' 
+                    : 'bg-gray-100 hover:bg-gray-200'
+                }`}
+                title="Sign Language Search - Click to start/stop sign language input"
+                aria-label="Sign Language Search - Click to start/stop sign language input"
+                onClick={() => {
+                  setIsCameraModalOpen(true)
+                }}
               >
-                <Video className="h-5 w-5" />
+                <Video className={`h-5 w-5 ${isClient && isCameraModalOpen ? 'animate-pulse' : ''}`} />
               </Button>
-              <span className="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-bold px-1 py-0.5 rounded">
-                Beta
+              <span className={`absolute -top-1 -right-1 text-[10px] font-bold px-1 py-0.5 rounded shadow bg-green-500 text-white`}>
+                {isClient && isCameraModalOpen ? 'ON' : 'Sign'}
               </span>
             </div>
           </div>
@@ -161,11 +189,12 @@ export default function Navbar() {
                 <div className="relative flex-1">
                   <Input
                     ref={desktopInputRef}
-                    placeholder="Search"
                     className="w-full h-10 px-4 border border-gray-300 rounded-l-full focus:border-neutral-500 focus:ring-1 focus:ring-neutral-500 outline-none"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     aria-label="Search"
+                    placeholder={isClient && isVoiceModalOpen ? 'Voice search active...' : isClient && isCameraModalOpen ? 'Sign language active...' : 'Search'}
+                    suppressHydrationWarning
                   />
                 </div>
                 <Button
@@ -181,15 +210,23 @@ export default function Navbar() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-10 w-10 bg-gray-100 hover:bg-gray-200 rounded-full"
-                    title="Search with voice"
-                    aria-label="Search with voice"
-                    onClick={() => setIsVoiceModalOpen(true)}
+                    className={`h-10 w-10 transition-colors rounded-full ${
+                      isClient && isVoiceModalOpen 
+                        ? 'bg-red-100 hover:bg-red-200 text-red-600' 
+                        : 'bg-gray-100 hover:bg-gray-200'
+                    }`}
+                    title="Voice Search - Click to start/stop voice input"
+                    aria-label="Voice Search - Click to start/stop voice input"
+                    onClick={() => {
+                      setIsVoiceModalOpen(true)
+                    }}
                   >
-                    <Mic className="h-5 w-5" />
+                    <Mic className={`h-5 w-5 ${isClient && isVoiceModalOpen ? 'animate-pulse' : ''}`} />
                   </Button>
-                  <span className="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-bold px-1 py-0.5 rounded">
-                    Beta
+                  <span className={`absolute -top-1 -right-1 text-[10px] font-bold px-1 py-0.5 rounded shadow ${
+                    isClient && isVoiceModalOpen ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'
+                  }`}>
+                    {isClient && isVoiceModalOpen ? 'ON' : 'Voice'}
                   </span>
                 </div>
 
@@ -197,15 +234,21 @@ export default function Navbar() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-10 w-10 bg-gray-100 hover:bg-gray-200 rounded-full"
-                    title="Search with sign language"
-                    aria-label="Search with sign language"
-                    onClick={() => setIsCameraModalOpen(true)}
+                    className={`h-10 w-10 transition-colors rounded-full ${
+                      isClient && isCameraModalOpen 
+                        ? 'bg-green-100 hover:bg-green-200 text-green-600' 
+                        : 'bg-gray-100 hover:bg-gray-200'
+                    }`}
+                    title="Sign Language Search - Click to start/stop sign language input"
+                    aria-label="Sign Language Search - Click to start/stop sign language input"
+                    onClick={() => {
+                      setIsCameraModalOpen(true)
+                    }}
                   >
-                    <Video className="h-5 w-5" />
+                    <Video className={`h-5 w-5 ${isClient && isCameraModalOpen ? 'animate-pulse' : ''}`} />
                   </Button>
-                  <span className="absolute -top-1 -right-1 bg-yellow-400 text-[10px] font-bold px-1 py-0.5 rounded">
-                    Beta
+                  <span className={`absolute -top-1 -right-1 text-[10px] font-bold px-1 py-0.5 rounded shadow bg-green-500 text-white`}>
+                    {isClient && isCameraModalOpen ? 'ON' : 'Sign'}
                   </span>
                 </div>
               </div>
@@ -420,27 +463,29 @@ export default function Navbar() {
         </DialogContent>
       </Dialog>
 
+      {/* Voice Search Modal */}
       <VoiceSearchDialog
         open={isVoiceModalOpen}
         onOpenChange={setIsVoiceModalOpen}
         onTranscriptChange={handleVoiceTranscriptChange}
       />
 
+      {/* Sign Language Search Modal */}
       <SignLanguageDialog
         isCameraModalOpen={isCameraModalOpen}
         setIsCameraModalOpen={setIsCameraModalOpen}
-        onResult={(text: string) => {
-          setSearchQuery((prev) => {
-            const sep = prev && !prev.endsWith(" ") ? " " : ""
-            return `${prev}${sep}${text}`
-          })
+        onResult={(word) => {
+          // Add all recognized letters/words to search query
+          setSearchQuery((prev) => prev + word)
           const el = isMobileSearchOpen ? mobileInputRef.current : desktopInputRef.current
-          el?.focus()
-          requestAnimationFrame(() => {
-            if (el) el.selectionStart = el.selectionEnd = el.value.length
-          })
+          if (el) {
+            requestAnimationFrame(() => {
+              el.selectionStart = el.selectionEnd = el.value.length
+            })
+          }
         }}
       />
+
 
       <div className="h-14" />
     </>

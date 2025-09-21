@@ -124,6 +124,7 @@ const LoginForm = ({ onLogin, setUser }: { onLogin: (status: boolean) => void; s
                             <div>
                                 <label htmlFor='name' className="block text-sm font-medium mb-2">Full Name</label>
                                 <Input
+                                    id="name"
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
@@ -135,6 +136,7 @@ const LoginForm = ({ onLogin, setUser }: { onLogin: (status: boolean) => void; s
                         <div>
                             <label htmlFor='email' className="block text-sm font-medium mb-2">Email</label>
                             <Input
+                                id="email"
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -145,6 +147,7 @@ const LoginForm = ({ onLogin, setUser }: { onLogin: (status: boolean) => void; s
                         <div>
                             <label htmlFor='password' className="block text-sm font-medium mb-2">Password</label>
                             <Input
+                                id="password"
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -294,6 +297,7 @@ const UploadSection = () => {
                         <div>
                             <label htmlFor='title' className="block text-sm font-medium mb-2">Title</label>
                             <Input
+                                id="title"
                                 value={videoDetails.title}
                                 onChange={(e) => setVideoDetails({ ...videoDetails, title: e.target.value })}
                                 placeholder="Enter video title"
@@ -302,6 +306,7 @@ const UploadSection = () => {
                         <div>
                             <label htmlFor='desc' className="block text-sm font-medium mb-2">Description</label>
                             <Textarea
+                                id="desc"
                                 value={videoDetails.description}
                                 onChange={(e) => setVideoDetails({ ...videoDetails, description: e.target.value })}
                                 placeholder="Tell viewers about your video"
@@ -311,6 +316,7 @@ const UploadSection = () => {
                         <div>
                             <label htmlFor='visiblity' className="block text-sm font-medium mb-2">Visibility</label>
                             <select
+                                id="visiblity"
                                 value={videoDetails.visibility}
                                 onChange={(e) => setVideoDetails({ ...videoDetails, visibility: e.target.value })}
                                 className="w-full p-2 border border-gray-300 rounded-md"
@@ -473,6 +479,7 @@ const CaptionEditor = ({
                         <div>
                             <label htmlFor='time1' className="block text-sm font-medium mb-2">Start Time</label>
                             <Input
+                                id="time1"
                                 value={newCaption.startTime}
                                 onChange={(e) => setNewCaption({ ...newCaption, startTime: e.target.value })}
                                 placeholder="00:00:00,000"
@@ -481,6 +488,7 @@ const CaptionEditor = ({
                         <div>
                             <label htmlFor='time2' className="block text-sm font-medium mb-2">End Time</label>
                             <Input
+                                id="time2"
                                 value={newCaption.endTime}
                                 onChange={(e) => setNewCaption({ ...newCaption, endTime: e.target.value })}
                                 placeholder="00:00:05,000"
@@ -496,6 +504,7 @@ const CaptionEditor = ({
                     <div>
                         <label htmlFor='caption' className="block text-sm font-medium mb-2">Caption Text</label>
                         <Textarea
+                            id="caption"
                             value={newCaption.text}
                             onChange={(e) => setNewCaption({ ...newCaption, text: e.target.value })}
                             placeholder="Enter caption text"

@@ -16,7 +16,10 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
+			<head>
+				<meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
+			</head>
 			<body className={inter.className}>{children}</body>
 		</html>
 	);

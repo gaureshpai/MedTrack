@@ -1,5 +1,5 @@
 datasource db {
-  provider = "postgresql" // or "mysql" | "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -8,26 +8,13 @@ generator client {
 }
 
 enum Role {
-  VIEWER
-  CREATOR
+  USER
   ADMIN
-}
-
-enum LikeType {
-  LIKE
-  DISLIKE
 }
 
 enum Category {
   EDUCATION
   ENTERTAINMENT
-  MUSIC
-  GAMING
-  SPORTS
-  NEWS
-  TECHNOLOGY
-  TRAVEL
-  FOOD
   OTHER
 }
 
@@ -37,7 +24,7 @@ model User {
   email            String   @unique
   passwordHash     String
   avatarUrl        String?
-  role             Role     @default(VIEWER)
+  role             Role     @default(USER)
   bio              String?
   subscribersCount Int      @default(0)
   createdAt        DateTime @default(now())
@@ -47,7 +34,7 @@ model User {
   subscribers   Subscription[] @relation("CreatorSubscriptions")
   history       History[]
   likes         Like[]
-  // notifications Notification[]
+  notifications Notification[]
 }
 
 model Video {
@@ -59,10 +46,8 @@ model Video {
   duration     Int?
   views        Int      @default(0)
   likes        Int      @default(0)
-  dislikes     Int      @default(0)
-  tags         String[] // Array of tags
+  tags         String[]
   category     String?
-  isLive       Boolean  @default(false)
   createdAt    DateTime @default(now())
 
   uploaderId String
@@ -84,7 +69,6 @@ model Subscription {
 
 model Like {
   id        String   @id @default(cuid())
-  type      LikeType
   createdAt DateTime @default(now())
 
   userId String
@@ -105,13 +89,13 @@ model History {
   video   Video  @relation(fields: [videoId], references: [id])
 }
 
-// model Notification {
-//   id        String   @id @default(cuid())
-//   message   String
-//   link      String?
-//   isRead    Boolean  @default(false)
-//   createdAt DateTime @default(now())
+model Notification {
+  id        String   @id @default(cuid())
+  message   String
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
 
-//   userId String
-//   user   User   @relation(fields: [userId], references: [id])
-// }
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
