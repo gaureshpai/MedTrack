@@ -1,0 +1,18 @@
+{
+  "name": "medtrack-functions",
+  "version": "1.0.0",
+  "description": "Azure Functions for MedTrack",
+  "main": "index.js",
+  "scripts": {
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "@azure/storage-blob": "^12.17.0",
+    "@azure/storage-queue": "^12.16.0",
+    "@azure/functions": "^4.0.0"
+
+
+  },
+  "devDependencies": {}
+}

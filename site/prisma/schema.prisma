@@ -1,10 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
+model User {
+  id               String         @id @default(cuid())
+  username         String         @unique
+  email            String         @unique
+  passwordHash     String
+  avatarUrl        String?
+  role             Role           @default(USER)
+  bio              String?
+  subscribersCount Int            @default(0)
+  createdAt        DateTime       @default(now())
+  history          History[]
+  likes            Like[]
+  notifications    Notification[]
+  subscribers      Subscription[] @relation("CreatorSubscriptions")
+  subscriptions    Subscription[] @relation("UserSubscriptions")
+  videos           Video[]
+}
+
+model Video {
+  id           String    @id @default(cuid())
+  title        String
+  description  String?
+  videoUrl     String
+  thumbnailUrl String?
+  duration     Int?
+  views        Int       @default(0)
+  likes        Int       @default(0)
+  tags         String[]
+  category     String?
+  createdAt    DateTime  @default(now())
+  uploaderId   String
+  History      History[]
+  likesList    Like[]
+  uploader     User      @relation(fields: [uploaderId], references: [id])
+}
+
+model Subscription {
+  id           String   @id @default(cuid())
+  subscriberId String
+  creatorId    String
+  createdAt    DateTime @default(now())
+  creator      User     @relation("CreatorSubscriptions", fields: [creatorId], references: [id])
+  subscriber   User     @relation("UserSubscriptions", fields: [subscriberId], references: [id])
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  userId    String
+  videoId   String?
+  user      User     @relation(fields: [userId], references: [id])
+  video     Video?   @relation(fields: [videoId], references: [id])
+}
+
+model History {
+  id        String   @id @default(cuid())
+  watchedAt DateTime @default(now())
+  userId    String
+  videoId   String
+  user      User     @relation(fields: [userId], references: [id])
+  video     Video    @relation(fields: [videoId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  message   String
+  link      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 enum Role {
@@ -16,86 +89,4 @@ enum Category {
   EDUCATION
   ENTERTAINMENT
   OTHER
-}
-
-model User {
-  id               String   @id @default(cuid())
-  username         String   @unique
-  email            String   @unique
-  passwordHash     String
-  avatarUrl        String?
-  role             Role     @default(USER)
-  bio              String?
-  subscribersCount Int      @default(0)
-  createdAt        DateTime @default(now())
-
-  videos        Video[]
-  subscriptions Subscription[] @relation("UserSubscriptions")
-  subscribers   Subscription[] @relation("CreatorSubscriptions")
-  history       History[]
-  likes         Like[]
-  notifications Notification[]
-}
-
-model Video {
-  id           String   @id @default(cuid())
-  title        String
-  description  String?
-  videoUrl     String
-  thumbnailUrl String?
-  duration     Int?
-  views        Int      @default(0)
-  likes        Int      @default(0)
-  tags         String[]
-  category     String?
-  createdAt    DateTime @default(now())
-
-  uploaderId String
-  uploader   User   @relation(fields: [uploaderId], references: [id])
-
-  likesList Like[]
-  History   History[]
-}
-
-model Subscription {
-  id           String   @id @default(cuid())
-  subscriberId String
-  creatorId    String
-  createdAt    DateTime @default(now())
-
-  subscriber User @relation("UserSubscriptions", fields: [subscriberId], references: [id])
-  creator    User @relation("CreatorSubscriptions", fields: [creatorId], references: [id])
-}
-
-model Like {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  videoId String?
-  video   Video?  @relation(fields: [videoId], references: [id])
-}
-
-model History {
-  id        String   @id @default(cuid())
-  watchedAt DateTime @default(now())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  videoId String
-  video   Video  @relation(fields: [videoId], references: [id])
-}
-
-model Notification {
-  id        String   @id @default(cuid())
-  message   String
-  link      String?
-  isRead    Boolean  @default(false)
-  createdAt DateTime @default(now())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
 }
